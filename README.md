@@ -1,8 +1,9 @@
-# Learn2Slither
+# Learn2Slither - Work in Progress 🚀
 
 <p align="center">
   <img src="https://i.ibb.co/LtKVD6T/Capture-d-cran-du-2025-01-09-21-16-04.png" 
-       alt="Capture d'écran">
+       alt="Capture d'écran"
+       width="400px">
 </p>
 
 ## Déploiement
