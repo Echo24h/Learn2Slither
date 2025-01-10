@@ -13,3 +13,9 @@
 ```shell
 python3 -m pip install --upgrade pip
 ```
+
+2. Lancer le jeu :
+
+```shell
+python3 game.py
+```
