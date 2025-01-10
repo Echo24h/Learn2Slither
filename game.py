@@ -45,7 +45,7 @@ def game_loop(screen, snake, food, game_start):
 
     # Vérifier si le serpent est mort
     is_dead = snake.is_dead()
-    if is_dead != False:
+    if is_dead != 0:
         end_game(is_dead)
 
     # Dessiner les éléments du jeu
