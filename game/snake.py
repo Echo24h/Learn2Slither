@@ -89,7 +89,6 @@ class Snake:
             return 2 # Mort par collision avec les bords
 
         if ((head_x, head_y) in self.body[1:]) and self.move_count > 0:
-            print (self.body[1:])
             return 3 # Mort par collision avec soi-même
 
         return 0 # Le serpent est vivant
