@@ -1,0 +1,1 @@
+# Ceci permet d'indiquer que ce répertoire est un module Python et peut contenir des imports.
