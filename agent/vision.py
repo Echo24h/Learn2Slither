@@ -39,13 +39,13 @@ def get_vision(snake, food):
 
     {
         'UP': ['0', 'W'], 
-        'DOWN': ['0', '0', '0', '0', '0', '0', '0', '0', 'W'], 
+        'DOWN': ['S', '0', '0', '0', '0', '0', '0', '0', 'W'], 
         'LEFT': ['0', 'W'], 
         'RIGHT': ['0', '0', '0', '0', '0', '0', '0', '0', 'W']
     }
 
     H: Tête du serpent
-    B: Corps du serpent
+    S: Corps du serpent
     G: Pomme verte
     R: Pomme rouge
     W: Mur
@@ -71,7 +71,7 @@ def get_vision(snake, food):
             if food_type != False:
                 vision[dir].append(food_type)
             elif (x, y) in body:
-                vision[dir].append('B')
+                vision[dir].append('S')
             else:
                 vision[dir].append('0')
     return vision
@@ -90,21 +90,21 @@ def print_vision(snake, food):
 
     Print example: 
 
-    "                       W                  
-                            0                  
-                            0                  
-    W 0 0 0 0 0 0 0 0 0 0 0 0 H 0 0 0 0 0 0 0 W
-                            0                  
-                            0                  
-                            0                  
-                            0                  
-                            0                  
-                            0                  
-                            0                  
-                            W                 "
+    "                           W                  
+                                0                  
+                                0                  
+      W 0 0 0 0 0 0 0 0 0 0 0 0 H S 0 0 0 0 0 0 W
+                                0                  
+                                0                  
+                                0                  
+                                0                  
+                                0                  
+                                0                  
+                                0                  
+                                W                 "
 
     H: Tête du serpent
-    B: Corps du serpent
+    S: Corps du serpent
     G: Pomme verte
     R: Pomme rouge
     W: Mur
@@ -124,7 +124,7 @@ def print_vision(snake, food):
                 elif (x, y) == (x_head, y_head):
                     print("H", end=" ")
                 elif (x, y) in snake_body:
-                    print("B", end=" ")
+                    print("S", end=" ")
                 elif is_food_position(x, y, food_list) == "G":
                     print("G", end=" ")
                 elif is_food_position(x, y, food_list) == "R":
