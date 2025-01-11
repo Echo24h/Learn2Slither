@@ -37,12 +37,12 @@ def get_vision(snake, food):
 
     Vision example:
 
-    [{
+    {
         'UP': ['0', 'W'], 
         'DOWN': ['0', '0', '0', '0', '0', '0', '0', '0', 'W'], 
         'LEFT': ['0', 'W'], 
         'RIGHT': ['0', '0', '0', '0', '0', '0', '0', '0', 'W']
-    }]
+    }
 
     H: Tête du serpent
     B: Corps du serpent
@@ -110,7 +110,6 @@ def print_vision(snake, food):
     W: Mur
     0: Espace vide
     """
-    # print(f"{WIDTH}x{HEIGHT}")
     x = -1
     y = -1
     x_head, y_head = snake.get_head()
