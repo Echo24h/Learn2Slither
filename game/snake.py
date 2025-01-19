@@ -88,14 +88,14 @@ class Snake:
         """Vérifier si le serpent est mort"""
 
         if self.length == 0:
-            return 1 # Mort par longueur nulle
+            return "Poison"
 
         head_x, head_y = self.body[0]
         if head_x < 0 or head_x >= WIDTH or head_y < 0 or head_y >= HEIGHT:
-            return 2 # Mort par collision avec les bords
+            return "Collision with a wall"
 
         if ((head_x, head_y) in self.body[1:]) and self.move_count > 0:
-            return 3 # Mort par collision avec soi-même
+            return "Collision with yourself"
 
         return 0 # Le serpent est vivant
 
