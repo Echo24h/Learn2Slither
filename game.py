@@ -5,8 +5,8 @@ from game.settings import BLOCK_SIZE, WIDTH, HEIGHT, SPEED
 from game.utils import draw_background
 
 # Terminer le jeu
-def end_game(is_dead):
-    print(f"Game Over! You're dead! Reason: {is_dead}")
+def end_game(reason):
+    print(f"Game Over! Reason: {reason}")
     pygame.quit()
     quit()
 
@@ -15,7 +15,7 @@ def event_handler(snake):
     for event in pygame.event.get():
         if event.type == pygame.QUIT \
         or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-            end_game()
+            end_game("Exited")
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 snake.change_direction("UP")
@@ -27,12 +27,11 @@ def event_handler(snake):
                 snake.change_direction("RIGHT")
 
 # Boucle principale du jeu
-def game_loop(screen, snake, food, game_start):
+def game_loop(screen, snake, food):
 
     event_handler(snake)
 
-    if game_start:
-        snake.move()
+    snake.move()
 
     # Vérifier si le serpent a mangé une pomme
     for item in food.get_food_list():
@@ -43,10 +42,8 @@ def game_loop(screen, snake, food, game_start):
                 snake.shrink()
             food.replace_food(item)
 
-    # Vérifier si le serpent est mort
-    is_dead = snake.is_dead()
-    if is_dead != 0:
-        end_game(is_dead)
+    if (reason := snake.is_dead()):
+        end_game(reason)
 
     # Dessiner les éléments du jeu
     draw_background(screen)
@@ -55,22 +52,19 @@ def game_loop(screen, snake, food, game_start):
 
 
 def main():
-    pygame.init()  # Initialisation ici avant d'utiliser Pygame
-
+    pygame.init()
     screen = pygame.display.set_mode((WIDTH * BLOCK_SIZE, HEIGHT * BLOCK_SIZE))
     pygame.display.set_caption("Learn2Slither")
 
     snake = Snake()
     food = Food()
 
-    game_start = False
+    clock = pygame.time.Clock()
 
     while True:
-        clock = pygame.time.Clock()
-        game_loop(screen, snake, food, game_start)
+        game_loop(screen, snake, food)
         pygame.display.update()
         clock.tick(SPEED)
-        game_start = True
 
 
 if __name__ == "__main__":

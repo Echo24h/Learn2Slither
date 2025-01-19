@@ -26,8 +26,9 @@ class Snake:
 
     def __generate_random_position(self):
         """Générer une position aléatoire pour le serpent en tenant compte de la direction et la longueur"""
-        x = random.randint(0, WIDTH - 1)
-        y = random.randint(0, HEIGHT - 1)
+        safe_distance = 3
+        x = random.randint(safe_distance, WIDTH - 1 - safe_distance)
+        y = random.randint(safe_distance, HEIGHT - 1 - safe_distance)
         return [(x,y)]
     
     
@@ -76,6 +77,11 @@ class Snake:
     def get_head(self):
         """Retourner la position de la tête du serpent"""
         return self.body[0]
+    
+
+    def get_body(self):
+        """Retourner la liste des segments du serpent"""
+        return self.body
 
 
     def is_dead(self):
