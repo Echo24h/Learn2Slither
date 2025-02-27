@@ -1,5 +1,4 @@
-from game.settings import BLOCK_SIZE, WIDTH, HEIGHT, SPEED
-
+from config import Config
 
 def is_food_position(x, y, food_list):
     """
@@ -23,7 +22,6 @@ def is_food_position(x, y, food_list):
     return False
 
 
-
 def get_vision(snake, food):
     """
     Retourne la vision du serpent.
@@ -33,7 +31,7 @@ def get_vision(snake, food):
     - food (Food): Instance de la nourriture
 
     Return:
-    - vision (list): Liste des directions avec les éléments vis
+    - vision (dict): Dictionnaire des directions avec les éléments vis
 
     Vision example:
 
@@ -64,7 +62,7 @@ def get_vision(snake, food):
         while True:
             x += dx
             y += dy
-            if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT:
+            if x < 0 or x >= Config.GRID_WIDTH.value or y < 0 or y >= Config.GRID_HEIGHT.value:
                 vision[dir].append('W')
                 break
             food_type = is_food_position(x, y, food_list)
@@ -75,6 +73,36 @@ def get_vision(snake, food):
             else:
                 vision[dir].append('0')
     return vision
+
+
+def get_preprocess_vision(snake, food):
+    """
+    Note: Cette fonction peut être améliorée pour obtenir une version plus rapide à l'exécution.
+
+    Retourne la vision du serpent prétraitée.
+
+    Parameters:
+    - snake (Snake): Instance du serpent
+    - food (Food): Instance de la nourriture
+
+    Return:
+    - preprocess_vision (dict): Dictionnaire des directions avec les éléments vis
+
+    Vision example:
+
+    {
+        'UP': 'OW',
+        'DOWN': 'S0W',
+        'LEFT': '0W',
+        'RIGHT': '00000000W'
+    }
+    """
+    vision = get_vision(snake, food)
+    preprocess_vision = {}
+
+    for dir, values in vision.items():
+        preprocess_vision[dir] = "".join(values)
+    return preprocess_vision
 
 
 def print_vision(snake, food):
@@ -116,10 +144,10 @@ def print_vision(snake, food):
     snake_body = snake.get_body()
     food_list = food.get_food_list()
 
-    while y < HEIGHT + 1:
-        while x < WIDTH + 1:
+    while y < Config.GRID_HEIGHT.value + 1:
+        while x < Config.GRID_WIDTH.value + 1:
             if x == x_head or y == y_head:
-                if x == -1 or x == WIDTH or y == -1 or y == HEIGHT:
+                if x == -1 or x == Config.GRID_WIDTH.value or y == -1 or y == Config.GRID_HEIGHT.value:
                     print("W", end=" ")
                 elif (x, y) == (x_head, y_head):
                     print("H", end=" ")

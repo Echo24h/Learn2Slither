@@ -1,7 +1,5 @@
-import pygame
 import random
-from .settings import BLOCK_SIZE, WIDTH, HEIGHT, INITIAL_SNAKE_LENGTH, SNAKE_COLOR
-from .utils import load_sprite
+from config import Config
 
 
 class Snake:
@@ -10,25 +8,21 @@ class Snake:
 
         self.move_count = 0
 
-        # Charger les sprites du serpent
-        self.head_sprite = load_sprite('assets/snake_head_' + SNAKE_COLOR + '.png')
-        self.body_sprite = load_sprite('assets/snake_body_' + SNAKE_COLOR + '.png')
-
         self.length = 1 # Longueur initiale du serpent
         self.direction = self.__generate_random_direction()  # Direction initiale du serpent
         self.dir_x, self.dir_y = self.direction
         self.body = self.__generate_random_position()  # Position initiale du serpent
 
         # Initialiser le serpent avec la longueur donnée
-        for _ in range(0, INITIAL_SNAKE_LENGTH - 1):
+        for _ in range(0, Config.INITIAL_SNAKE_LENGTH.value - 1):
             self.grow()
 
 
     def __generate_random_position(self):
         """Générer une position aléatoire pour le serpent en tenant compte de la direction et la longueur"""
-        safe_distance = 3
-        x = random.randint(safe_distance, WIDTH - 1 - safe_distance)
-        y = random.randint(safe_distance, HEIGHT - 1 - safe_distance)
+        safe_distance = 0
+        x = random.randint(safe_distance, Config.GRID_WIDTH.value - 1 - safe_distance)
+        y = random.randint(safe_distance, Config.GRID_HEIGHT.value - 1 - safe_distance)
         return [(x,y)]
     
     
@@ -37,6 +31,20 @@ class Snake:
         directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
         return random.choice(directions)
     
+
+    def get_direction(self):
+        """Retourner la direction du serpent"""
+        return self.direction
+
+
+    def size(self):
+        """Retourner la taille du serpent"""
+        return self.length
+    
+
+    def score(self):
+        """Retourner le score du serpent"""
+        return self.length - Config.INITIAL_SNAKE_LENGTH.value
 
 
     def move(self):
@@ -57,20 +65,20 @@ class Snake:
 
     def shrink(self):
         """Faire rétrécir le serpent"""
-        if self.length > 0:
+        if self.length > 1:
             self.body.pop()  # Retirer le dernier segment du serpent
             self.length -= 1
 
 
     def change_direction(self, new_direction):
         """Changer la direction du serpent"""
-        if new_direction == "UP" and (self.dir_x, self.dir_y) != (0, 1):
+        if new_direction == "UP":
             self.direction = (0, -1)
-        elif new_direction == "DOWN" and (self.dir_x, self.dir_y) != (0, -1):
+        elif new_direction == "DOWN":
             self.direction = (0, 1)
-        elif new_direction == "LEFT" and (self.dir_x, self.dir_y)!= (1, 0):
+        elif new_direction == "LEFT":
             self.direction = (-1, 0)
-        elif new_direction == "RIGHT" and (self.dir_x, self.dir_y) != (-1, 0):
+        elif new_direction == "RIGHT":
             self.direction = (1, 0)
 
 
@@ -91,34 +99,10 @@ class Snake:
             return "Poison"
 
         head_x, head_y = self.body[0]
-        if head_x < 0 or head_x >= WIDTH or head_y < 0 or head_y >= HEIGHT:
+        if head_x < 0 or head_x >= Config.GRID_WIDTH.value or head_y < 0 or head_y >= Config.GRID_HEIGHT.value:
             return "Collision with a wall"
 
         if ((head_x, head_y) in self.body[1:]) and self.move_count > 0:
             return "Collision with yourself"
 
         return 0 # Le serpent est vivant
-
-
-    def __get_rotation_angle(self):
-        """Retourner l'angle de rotation en fonction de la direction actuelle"""
-        if self.direction == (0, -1):  # Haut
-            return 0
-        elif self.direction == (-1, 0):  # Gauche
-            return 90
-        elif self.direction == (0, 1):  # Bas
-            return 180
-        elif self.direction == (1, 0):  # Droite
-            return 270
-
-
-    def draw(self, screen):
-        """Dessiner le serpent sur l'écran avec les sprites"""
-        for i, segment in enumerate(self.body):
-            x, y = segment
-            if i == 0:  # Tête
-                rotated_head = pygame.transform.rotate(self.head_sprite, self.__get_rotation_angle())
-                screen.blit(rotated_head, (x * BLOCK_SIZE, y * BLOCK_SIZE))
-            elif self.body[0] != self.body[1]:
-                rotated_body = pygame.transform.rotate(self.body_sprite, self.__get_rotation_angle())
-                screen.blit(rotated_body, (x * BLOCK_SIZE, y * BLOCK_SIZE))
