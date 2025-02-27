@@ -1,7 +1,7 @@
 # Learn2Slither - Work in Progress 🚀
 
 <p align="center">
-  <img src="https://i.ibb.co/LtKVD6T/Capture-d-cran-du-2025-01-09-21-16-04.png" 
+  <img src="https://i.ibb.co/ccTmPP0r/Capture-d-cran-du-2025-02-27-15-02-15.png" 
        alt="Capture d'écran"
        width="400px">
 </p>
@@ -14,8 +14,9 @@
 python3 -m pip install --upgrade pip
 ```
 
-2. Lancer le jeu :
+2. Lancer l'agent :
 
 ```shell
-python3 game.py
+python3 main.py play
 ```
+
