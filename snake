@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+from agent import QLearning
+from config import Config
+
+
+def help():
+    print("-visual on/off : Affiche ou non le jeu (défaut : on)")
+    print("-sessions <int> : Nombre de parties à jouer (défaut : 1)")
+    print("-load <file> : Charge un modèle de Q-table")
+    print("-save <file> : Sauvegarde le modèle de Q-table")
+    print("-dontlearn : Désactive l'apprentissage")
+    print("-step-by-step : Attend une entrée utilisateur entre chaque étape")
+    print("-help : Affiche ce message")
+    print("Exemple:")
+    print("./snake -visual on -load models/100sess.csvtxt -sessions 10 -dontlearn -step-by-step")
+    sys.exit(0)
+
+if __name__ == "__main__":
+    # Récuère argv et exécute la fonction correspondante
+
+    visual = True
+    sessions = Config.EPISODES.value
+    load = None
+    save = None
+    learn = True
+    step_by_step = False
+
+    import sys
+    if sys.argv[1] == "help":
+        help()
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] == "-visual":
+            visual = sys.argv[i+1] == "on"
+            i += 1
+        elif sys.argv[i] == "-sessions":
+            sessions = int(sys.argv[i+1])
+            i += 1
+        elif sys.argv[i] == "-load":
+            load = sys.argv[i+1]
+            i += 1
+        elif sys.argv[i] == "-save":
+            save = sys.argv[i+1]
+            i += 1
+        elif sys.argv[i] == "-dontlearn":
+            learn = False
+        elif sys.argv[i] == "-step-by-step":
+            step_by_step = True
+        else:
+            help()
+        i += 1
+    
+    print("Visual:", visual)
+    print("Sessions:", sessions)
+    print("Load:", load)
+    print("Save:", save)
+    print("Learn:", learn)
+    print("Step by step:", step_by_step)
+
+    # Crée un agent Q-learning
+    agent = QLearning(visual, sessions, step_by_step, learn)
+    agent.load_model(load)
+    agent.run()
+    agent.save_model(save)

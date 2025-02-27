@@ -8,13 +8,17 @@ from .vision import get_preprocess_vision
 
 class QLearning:
 
-    def __init__(self, model_file_path: str = None) -> None:
+    def __init__(self, visual: bool = True, episodes: int = Config.EPISODES.value, step_by_step: bool = False, learn: bool = True) -> None:
 
         # Charger les données Q
-        if model_file_path:
-            self.__q_data = QData(model_file_path)
-        else:
-            self.__q_data = QData()
+        self.__q_data = QData()
+        self.__episodes = episodes
+        self.__visual = visual
+        self.__step_by_step = step_by_step
+        self.__learn = learn
+        if not learn:
+            self.__q_data.exploration_rate = 0
+
 
     
     def __check_vision(self, vision: dict[str, str]) -> None:
@@ -27,10 +31,10 @@ class QLearning:
         return {direction: self.__q_data.q_table[state] for direction, state in vision.items()}
 
 
-    def __chose_action(self, vision: dict[str, str], isTrain = False) -> str:
+    def __chose_action(self, vision: dict[str, str]) -> str:
         self.__check_vision(vision)
         
-        if isTrain and random.random() < self.__q_data.exploration_rate:
+        if self.__learn and random.random() < self.__q_data.exploration_rate:
             return Config.ACTIONS.value[random.choice(range(Config.NUM_ACTIONS.value))]
         else:
             max_value = numpy.argmax([self.__q_data.q_table[value] for _, value in vision.items()])
@@ -77,12 +81,24 @@ class QLearning:
         self.__q_data.q_table[state] = self.__q_data.q_table[state] + alpha * (reward + gamma * (max_next_Q - self.__q_data.q_table[state]))
 
 
-    def train(self, episodes: int = Config.EPISODES.value, isDisplay: bool = None, isTrain: bool = None) -> None:
-        
-        if isDisplay: 
-            display = Display()
+    def load_model(self, model_file_path: str = None) -> None:
+        if model_file_path:
+            self.__q_data = QData(model_file_path)
+            if not self.__learn:
+                self.__q_data.exploration_rate = 0
 
-        for episode in range(episodes):
+
+    def save_model(self, model_file_path: str = None) -> None:
+        if model_file_path:
+            self.__q_data.save_q_data(model_file_path)
+
+
+    def run(self) -> None:
+        
+        if self.__visual: 
+            display = Display(self.__step_by_step)
+
+        for episode in range(self.__episodes):
             snake = Snake()
             food = Food(snake.get_body())
             vision = get_preprocess_vision(snake, food)
@@ -91,13 +107,13 @@ class QLearning:
 
             while not done:
 
-                if isDisplay: 
+                action = self.__chose_action(vision)
+                state = vision[action]
+
+                if self.__visual: 
                     # Met à jour l'affichage et vérifie si le jeu est en pause
                     while display.update_display(snake, food, self.__get_coefs(vision)):
                         continue
-
-                action = self.__chose_action(vision, isTrain)
-                state = vision[action]
 
                 reward, done = self.__step(action, snake, food)
 
@@ -110,12 +126,9 @@ class QLearning:
 
             self.__q_data.exploration_rate = max(self.__q_data.min_exploration, self.__q_data.exploration_rate * self.__q_data.exploration_decay)
             
-            if episode % 100 == 0:
-                print(f"Episode {episode + 1}/{episodes} terminé avec un score de {snake.score()} - Exploration : {self.__q_data.exploration_rate}")
+            print(f"Episode {episode + 1}/{self.__episodes} terminé avec un score de {snake.score()} - Exploration : {self.__q_data.exploration_rate}")
         
-        if isDisplay: 
+        if self.__visual: 
             display.close()
 
-        if isTrain:
-            self.__q_data.save_q_data()
-            print("Apprentissage terminé !")
+        print("Apprentissage terminé !")

@@ -38,7 +38,7 @@ class Config(Enum):
     EXPLORATION_RATE = 1
     EXPLORATION_DECAY = 0.999 # 0.99
     MIN_EXPLORATION = 0
-    EPISODES = 100000 # 1000
+    EPISODES = 1 # 1000
     REWARDS = {
         "GREEN": 10,
         "RED": -10,
