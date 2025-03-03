@@ -6,9 +6,6 @@
        width="400px">
 </p>
 
-## **Description**
-Ce programme permet de jouer à Snake avec une intelligence artificielle basée sur une **Q-table**. Il propose plusieurs options pour personnaliser l'expérience, y compris l'affichage du jeu, le chargement et la sauvegarde d'un modèle, ainsi que le contrôle du processus d'apprentissage.
-
 ---
 
 ## **Utilisation**
