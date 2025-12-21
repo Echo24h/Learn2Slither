@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import pygame
 
 from config import Config
 from game import Snake, Food, Display
@@ -114,54 +115,61 @@ class QLearning:
         if self.__visual:
             display = Display(self.__step_by_step)
 
-        for episode in range(self.__episodes):
-            snake = Snake()
-            food = Food(snake.get_body())
-            vision = get_preprocess_vision(snake, food)
-            done = False
-            steps = 0
+        try:
+            for episode in range(self.__episodes):
+                snake = Snake()
+                food = Food(snake.get_body())
+                vision = get_preprocess_vision(snake, food)
+                done = False
+                steps = 0
 
-            while not done:
-                action = self.__choose_action(vision)
-                state = vision[action]
+                while not done:
+                    action = self.__choose_action(vision)
+                    state = vision[action]
 
-                if self.__visual:
-                    # Update display
-                    while display.update_display(
-                            snake, food, self.__get_coefs(vision)):
-                        continue
+                    if self.__visual:
+                        # Update display
+                        while display.update_display(
+                                snake, food, self.__get_coefs(vision)):
+                            continue
 
-                reward, done = self.__step(action, snake, food)
+                    reward, done = self.__step(action, snake, food)
 
-                next_vision = get_preprocess_vision(snake, food)
-                self.__check_vision(next_vision)
+                    next_vision = get_preprocess_vision(snake, food)
+                    self.__check_vision(next_vision)
 
+                    if self.__learn:
+                        self.__update_q_table(state, next_vision, reward)
+
+                    vision = next_vision
+                    steps += 1
+
+                # Record episode statistics
+                self.__stats.record_episode(
+                    snake.score(),
+                    self.__q_data.exploration_rate,
+                    steps
+                )
+
+                # Decay exploration rate
                 if self.__learn:
-                    self.__update_q_table(state, next_vision, reward)
+                    self.__q_data.exploration_rate = max(
+                        self.__q_data.min_exploration,
+                        self.__q_data.exploration_rate *
+                        self.__q_data.exploration_decay)
 
-                vision = next_vision
-                steps += 1
+                print(f"Episode {episode + 1}/{self.__episodes} finished "
+                      f"with a score of {snake.score()} - "
+                      f"Exploration: {self.__q_data.exploration_rate:.4f}")
 
-            # Record episode statistics
-            self.__stats.record_episode(
-                snake.score(),
-                self.__q_data.exploration_rate,
-                steps
-            )
+        except KeyboardInterrupt:
+            print("\nTraining interrupted by user (Ctrl+C)")
+        except pygame.error:
+            print("\nTraining interrupted: Game display closed")
+        except Exception as e:
+            print(f"\nAn error occurred: {e}")
 
-            # Decay exploration rate
-            if self.__learn:
-                self.__q_data.exploration_rate = max(
-                    self.__q_data.min_exploration,
-                    self.__q_data.exploration_rate *
-                    self.__q_data.exploration_decay)
-
-            print(f"Episode {episode + 1}/{self.__episodes} finished "
-                  f"with a score of {snake.score()} - "
-                  f"Exploration: {self.__q_data.exploration_rate:.4f}")
-
-        if self.__visual:
-            display.close()
-
-        print("Training completed!")
-        self.__stats.plot()
+        finally:
+            if self.__visual:
+                display.close()
+            self.__stats.plot()
