@@ -19,7 +19,7 @@ Run the program with various command‑line options:
 | Option | Description |
 |--------|-------------|
 | `-visual on/off` | Enables or disables the game display (default: `on`). |
-| `-sessions <int>` | Sets the number of game sessions to play (default: `1`). |
+| `-episodes <int>` | Sets the number of game sessions to play (default: `1`). |
 | `-load <file>` | Loads a **Q‑table** model from a file. |
 | `-save <file>` | Saves the **Q‑table** model to a file. |
 | `-dontlearn` | Disables learning during execution. |
@@ -31,7 +31,7 @@ Run the program with various command‑line options:
 ## **Example Execution**
 
 ```bash
-./snake -visual on -load models/100sess.csvtxt -sessions 10 -dontlearn -step-by-step
+./snake -visual on -load models/100sess.csvtxt -episodes 10 -dontlearn -step-by-step
 ```
 
 - Enables the game display  
