@@ -1,9 +1,15 @@
 import csv
 from config import Config
 
-class QData:
 
-    def __init__(self, model_file_path=None):
+class QData:
+    """
+    Class to manage Q-learning data, including the Q-table and learning
+    parameters. It provides methods to load and save the Q-table from/to a CSV
+    file.
+    """
+
+    def __init__(self, model_file_path: str = None):
 
         self.q_table = {}
         self.step = 0
@@ -16,16 +22,16 @@ class QData:
         if model_file_path:
             self.__load_q_data(model_file_path)
 
-    
-        # Charger les données
-    def __load_q_data(self, model_file_path="models/q_table.csv"):
+    # Load the Q-table data
+    def __load_q_data(
+            self, model_file_path: str = "models/q_table.csv") -> None:
         try:
             with open(model_file_path, "r") as file:
 
                 reader = csv.reader(file)
-                next(reader)  # Ignorer l'entête
+                next(reader)  # Skip header
 
-                # Lecture des paramètres
+                # Read parameters
                 params = next(reader)
                 self.step = int(params[0])
                 self.learning_rate = float(params[1])
@@ -34,29 +40,34 @@ class QData:
                 self.exploration_decay = float(params[4])
                 self.min_exploration = float(params[5])
 
-                next(reader)  # Ignorer l'entête
+                next(reader)  # Skip header
 
-                # Lecture des états et valeurs
+                # Read states and values
                 for row in reader:
                     self.q_table[row[0]] = float(row[1])
 
-            print(f"Table Q chargée depuis {model_file_path}")
+            print(f"Q-table loaded from {model_file_path}")
 
         except Exception as e:
-            print(f"Erreur lors du chargement de la table Q : {e}")
+            print(f"Error loading Q-table: {e}")
 
+    # Save data to the Q-table
+    def save_q_data(self, model_file_path: str = "models/q_table.csv",
+                    q_learning_data: dict = None) -> None:
+        if q_learning_data is None:
+            q_learning_data = {}
 
-    # Sauvegarder les données
-    def save_q_data(self, model_file_path="models/q_table.csv", q_learning_data = {}):
-
-        try :
+        try:
             with open(model_file_path, "w") as file:
                 writer = csv.writer(file)
 
-                # En-tête pour les paramètres
-                writer.writerow(["step", "learning_rate", "discount_factor", "exploration", "exploration_decay", "min_exploration"])
+                # Header for parameters
+                writer.writerow([
+                    "step", "learning_rate", "discount_factor",
+                    "exploration", "exploration_decay", "min_exploration"
+                ])
 
-                # Écriture des paramètres
+                # Write parameters
                 writer.writerow([
                     self.step,
                     self.learning_rate,
@@ -66,14 +77,13 @@ class QData:
                     self.min_exploration
                 ])
 
-                # En-tête pour les états
+                # Header for states and values
                 writer.writerow(["state", "value"])
 
-                # Écriture des états et valeurs
+                # Write states and values
                 for key, value in self.q_table.items():
                     writer.writerow([key, value])
 
-            print(f"Table Q sauvegardée dans {model_file_path}")
-
+            print(f"Q-table saved to {model_file_path}")
         except Exception as e:
-            print(f"Erreur lors de la sauvegarde de la table Q : {e}")
+            print(f"Error saving Q-table: {e}")

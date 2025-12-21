@@ -1,4 +1,3 @@
-# Ceci permet d'indiquer que ce répertoire est un module Python et peut contenir des imports.
-from .snake import Snake
-from .food import Food
-from .display import Display
+from .snake import Snake  # noqa: F401
+from .food import Food  # noqa: F401
+from .display import Display  # noqa: F401

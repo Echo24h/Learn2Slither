@@ -5,20 +5,22 @@ from agent import QLearning
 from config import Config
 
 
-def help():
-    print("-visual on/off : Affiche ou non le jeu (défaut : on)")
-    print("-sessions <int> : Nombre de parties à jouer (défaut : 1)")
-    print("-load <file> : Charge un modèle de Q-table")
-    print("-save <file> : Sauvegarde le modèle de Q-table")
-    print("-dontlearn : Désactive l'apprentissage")
-    print("-step-by-step : Attend une entrée utilisateur entre chaque étape")
-    print("-help : Affiche ce message")
-    print("Exemple:")
-    print("./snake -visual on -load models/100sess.csvtxt -sessions 10 -dontlearn -step-by-step")
+def help() -> None:
+    """Display help message and exit."""
+    print("-visual on/off : Display the game or not (default : on)")
+    print("-sessions <int> : Number of games to play (default : 1)")
+    print("-load <file> : Load a Q-table model")
+    print("-save <file> : Save the Q-table model")
+    print("-dontlearn : Disable learning")
+    print("-step-by-step : Wait for user input between each step")
+    print("-help : Display this message")
+    print("Example:")
+    print("./snake -visual on -load models/100sess.csvtxt -sessions 10")
     sys.exit(0)
 
+
 if __name__ == "__main__":
-    # Récuère argv et exécute la fonction correspondante
+    # Parse command line arguments
 
     visual = True
     sessions = Config.EPISODES.value
@@ -47,7 +49,8 @@ if __name__ == "__main__":
         else:
             help()
         i += 1
-    
+
+    # Print configuration
     print("Visual:", visual)
     print("Sessions:", sessions)
     print("Load:", load)
@@ -55,7 +58,7 @@ if __name__ == "__main__":
     print("Learn:", learn)
     print("Step by step:", step_by_step)
 
-    # Crée un agent Q-learning
+    # Run the agent
     agent = QLearning(visual, sessions, step_by_step, learn)
     agent.load_model(load)
     agent.run()
