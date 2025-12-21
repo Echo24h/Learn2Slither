@@ -305,4 +305,3 @@ class Display:
     def close(self) -> None:
         """Close the game window"""
         pygame.quit()
-        quit()

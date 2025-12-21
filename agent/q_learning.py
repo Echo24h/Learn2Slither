@@ -5,6 +5,7 @@ from config import Config
 from game import Snake, Food, Display
 from .q_data import QData
 from .vision import get_preprocess_vision
+from .training_stats import TrainingStats
 
 
 class QLearning:
@@ -25,6 +26,9 @@ class QLearning:
         self.__learn = learn
         if not learn:
             self.__q_data.exploration_rate = 0
+
+        # Statistics tracking
+        self.__stats = TrainingStats()
 
     def __check_vision(self, vision: dict[str, str]) -> None:
         """Ensure all states in vision are initialized in the Q-table."""
@@ -115,6 +119,7 @@ class QLearning:
             food = Food(snake.get_body())
             vision = get_preprocess_vision(snake, food)
             done = False
+            steps = 0
 
             while not done:
                 action = self.__choose_action(vision)
@@ -135,6 +140,14 @@ class QLearning:
                     self.__update_q_table(state, next_vision, reward)
 
                 vision = next_vision
+                steps += 1
+
+            # Record episode statistics
+            self.__stats.record_episode(
+                snake.score(),
+                self.__q_data.exploration_rate,
+                steps
+            )
 
             # Decay exploration rate
             if self.__learn:
@@ -151,3 +164,4 @@ class QLearning:
             display.close()
 
         print("Training completed!")
+        self.__stats.plot()
