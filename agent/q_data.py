@@ -22,12 +22,10 @@ class QData:
         if model_file_path:
             self.__load_q_data(model_file_path)
 
-    # Load the Q-table data
-    def __load_q_data(
-            self, model_file_path: str = "models/q_table.csv") -> None:
+    def __load_q_data(self, model_file_path: str) -> None:
+        """Load Q-table data from a CSV file."""
         try:
             with open(model_file_path, "r") as file:
-
                 reader = csv.reader(file)
                 next(reader)  # Skip header
 
@@ -44,21 +42,20 @@ class QData:
 
                 # Read states and values
                 for row in reader:
-                    self.q_table[row[0]] = float(row[1])
+                    if len(row) == 2:
+                        self.q_table[row[0]] = float(row[1])
 
             print(f"Q-table loaded from {model_file_path}")
 
+        except FileNotFoundError:
+            print(f"Error: File {model_file_path} not found")
         except Exception as e:
             print(f"Error loading Q-table: {e}")
 
-    # Save data to the Q-table
-    def save_q_data(self, model_file_path: str = "models/q_table.csv",
-                    q_learning_data: dict = None) -> None:
-        if q_learning_data is None:
-            q_learning_data = {}
-
+    def save_q_data(self, model_file_path: str) -> None:
+        """Save Q-table data to a CSV file."""
         try:
-            with open(model_file_path, "w") as file:
+            with open(model_file_path, "w", newline='') as file:
                 writer = csv.writer(file)
 
                 # Header for parameters

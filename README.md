@@ -1,60 +1,205 @@
-# Learn2Slither
+# Learn2Slither 🐍
+
+A Q-learning agent that learns to play Snake using reinforcement learning.
 
 <p align="center">
   <img src="https://i.ibb.co/ccTmPP0r/Capture-d-cran-du-2025-02-27-15-02-15.png"
-       alt="Screenshot"
+       alt="Learn2Slither Screenshot"
        width="400px">
 </p>
 
 ---
 
-## **Usage**
-Run the program with various command‑line options:
+## **Overview**
 
+Learn2Slither is a reinforcement learning project that implements a Q-learning algorithm to teach an AI agent to play the classic Snake game. The agent learns through trial and error, gradually improving its performance over multiple episodes.
+
+### **Features**
+- 🎮 Interactive visual display with Pygame
+- 🧠 Q-learning algorithm implementation
+- 💾 Save and load trained models
+- ⚡ Adjustable game speed
+- 📊 Real-time performance metrics
+- 🎯 Two types of food (green: grow, red: shrink)
+
+---
+
+## **Installation**
+
+### **Prerequisites**
+- Python 3.12 (recommended)
+- pip package manager
+
+> **Note:** Python 3.14+ is not compatible with Pygame. Use Python 3.12 or earlier.
+
+### **Setup**
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd Learn2Slither
+   ```
+
+2. **Create a virtual environment (recommended)**
+   ```bash
+   # Windows
+   py -3.12 -m venv venv
+   venv\Scripts\activate
+
+   # Linux/Mac
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+---
+
+## **Usage**
+
+### **Basic Command**
 ```bash
 ./snake [options]
 ```
 
 ### **Available Options**
-| Option | Description |
-|--------|-------------|
-| `-visual on/off` | Enables or disables the game display (default: `on`). |
-| `-episodes <int>` | Sets the number of game sessions to play (default: `1`). |
-| `-load <file>` | Loads a **Q‑table** model from a file. |
-| `-save <file>` | Saves the **Q‑table** model to a file. |
-| `-dontlearn` | Disables learning during execution. |
-| `-step-by-step` | Waits for user input between each step. |
-| `-help` | Displays this help message. |
+| Option | Description | Default |
+|--------|-------------|---------|
+| `-visual on/off` | Enable or disable game display | `on` |
+| `-episodes <int>` | Number of training episodes | `1` |
+| `-load <file>` | Load a pre-trained Q-table | `None` |
+| `-save <file>` | Save the Q-table after training | `None` |
+| `-dontlearn` | Disable learning (exploitation only) | `False` |
+| `-step-by-step` | Wait for user input between steps | `False` |
+| `-help` | Display help message | - |
+
+### **Example Commands**
+
+**Train a new agent:**
+```bash
+./snake -visual on -episodes 1000 -save models/my_model.csv
+```
+
+**Load and watch a trained agent:**
+```bash
+./snake -visual on -load models/q_table_100000.csv -episodes 10 -dontlearn
+```
+
+**Step-by-step debugging:**
+```bash
+./snake -visual on -load models/q_table_100000.csv -step-by-step -dontlearn
+```
+
+**Train without visual display (faster):**
+```bash
+./snake -visual off -episodes 10000 -save models/trained_model.csv
+```
 
 ---
 
-## **Example Execution**
+## **Project Structure**
 
-```bash
-./snake -visual on -load models/100sess.csvtxt -episodes 10 -dontlearn -step-by-step
 ```
-
-- Enables the game display  
-- Loads the Q‑table from `models/100sess.csvtxt`  
-- Plays **10 sessions**  
-- Disables learning  
-- Waits for user input between each step  
+Learn2Slither/
+├── agent/
+│   ├── __init__.py
+│   ├── q_learning.py      # Q-learning algorithm implementation
+│   ├── q_data.py          # Q-table management
+│   └── vision.py          # Snake vision processing
+├── config/
+│   ├── __init__.py
+│   └── config.py          # Game and learning parameters
+├── game/
+│   ├── __init__.py
+│   ├── snake.py           # Snake logic
+│   ├── food.py            # Food management
+│   └── display.py         # Pygame visualization
+├── assets/                # Sprites and images
+├── models/                # Saved Q-tables
+├── snake                  # Main entry point
+├── requirements.txt       # Python dependencies
+└── README.md
+```
 
 ---
 
-## **Dependencies**
-Make sure you have installed the required dependencies:
+## **How It Works**
 
+### **Q-Learning Algorithm**
+The agent uses Q-learning, a model-free reinforcement learning algorithm:
+- **State**: The snake's vision in 4 directions (UP, DOWN, LEFT, RIGHT)
+- **Actions**: Move in one of the 4 directions
+- **Rewards**:
+  - Green food: +10
+  - Red food: -10
+  - Wall/Self collision: -20
+  - Regular move: -1
+
+### **Vision System**
+The snake perceives its environment through ray-casting in 4 directions, detecting:
+- Walls (W)
+- Own body (S)
+- Green food (G)
+- Red food (R)
+- Empty space (0)
+
+### **Learning Parameters**
+Configurable in [config/config.py](config/config.py):
+- Learning rate: 0.1
+- Discount factor: 0.99
+- Exploration rate: 1.0 (decays over time)
+- Exploration decay: 0.999
+
+---
+
+## **Controls (Visual Mode)**
+
+- **Space**: Pause/Resume
+- **Left Arrow**: Decrease game speed
+- **Right Arrow**: Increase game speed
+- **Escape**: Quit game
+
+In step-by-step mode:
+- **Space**: Advance to next step
+
+---
+
+## **Development**
+
+### **Code Quality**
+The project follows Python best practices:
+- Type hints for better code clarity
+- Comprehensive docstrings
+- PEP 8 style compliance
+- Modular architecture
+
+### **Testing**
+Run linting with flake8:
 ```bash
-pip install -r requirements.txt
+flake8 .
 ```
 
-If you are using a virtual environment **(recommended)**:
+---
 
-> Note: Python 3.14 is not compatible with Pygame. Python 3.12 is recommended.
+## **License**
 
-```bash
-py -3.12 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
+This project is provided as-is for educational purposes.
+
+---
+
+## **Contributing**
+
+Contributions are welcome! Feel free to:
+- Report bugs
+- Suggest new features
+- Submit pull requests
+
+---
+
+## **Acknowledgments**
+
+- Pygame community for the excellent game development framework
+- Q-learning algorithm based on classical reinforcement learning literature

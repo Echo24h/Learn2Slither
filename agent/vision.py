@@ -1,6 +1,7 @@
-"""
-Module to manage the vision of the snake.
-It provides functions to get and print the vision of the snake.
+"""Module to manage the vision of the snake.
+
+Provides functions to get and process the snake's vision, which is used
+by the Q-learning agent to make decisions.
 """
 
 from config import Config
@@ -9,16 +10,15 @@ from game import Snake
 
 
 def is_food_position(x: int, y: int, food_list: list) -> str | bool:
-    """
-    Verify if the position is already occupied by a food.
+    """Verify if a position contains food.
 
-    Parameters:
-    - x, y (int): Coordinates of the position
-    - food_list (list): List of food items
-    Return:
-    - "G" if the food is green
-    - "R" if the food is red
-    - False if the position is empty
+    Args:
+        x: X coordinate
+        y: Y coordinate
+        food_list: List of food items
+
+    Returns:
+        "G" if green food, "R" if red food, False if empty
     """
     for food in food_list:
         if (x, y) == food["position"]:
@@ -30,30 +30,30 @@ def is_food_position(x: int, y: int, food_list: list) -> str | bool:
 
 
 def get_vision(snake: Snake, food: Food) -> dict[str, list[str]]:
-    """
-    Return the vision of the snake.
+    """Return the vision of the snake in all four directions.
 
-    Parameters:
-    - snake (Snake): Instance of the snake
-    - food (Food): Instance of the food
-    Return:
-    - vision (dict): Dictionary of directions with visible elements
+    Args:
+        snake: Snake instance
+        food: Food instance
 
-    Vision example:
+    Returns:
+        Dictionary mapping directions to lists of visible elements
 
-    {
-        'UP': ['0', 'W'],
-        'DOWN': ['S', '0', '0', '0', '0', '0', '0', '0', 'W'],
-        'LEFT': ['0', 'W'],
-        'RIGHT': ['0', '0', '0', '0', '0', '0', '0', '0', 'W']
-    }
+    Example:
+        {
+            'UP': ['0', 'W'],
+            'DOWN': ['S', '0', '0', '0', '0', '0', '0', '0', 'W'],
+            'LEFT': ['0', 'W'],
+            'RIGHT': ['0', '0', '0', '0', '0', '0', '0', '0', 'W']
+        }
 
-    H: Head of the snake
-    S: Body of the snake
-    G: Green apple
-    R: Red apple
-    W: Wall
-    0: Empty space
+    Legend:
+        H: Head of the snake
+        S: Body of the snake
+        G: Green apple
+        R: Red apple
+        W: Wall
+        0: Empty space
     """
     vision = {"UP": [], "DOWN": [], "LEFT": [], "RIGHT": []}
 
@@ -83,32 +83,26 @@ def get_vision(snake: Snake, food: Food) -> dict[str, list[str]]:
     return vision
 
 
-# TODO: This function can be improved for performance if needed
 def get_preprocess_vision(snake: Snake, food: Food) -> dict[str, str]:
-    """
-    Return the preprocessed vision of the snake.
+    """Return the preprocessed (flattened) vision of the snake.
 
-    Parameters:
-    - snake (Snake): Instance of the snake
-    - food (Food): Instance of the food
-    Return:
-    - preprocess_vision (dict): Dictionary of directions with visible elements
+    Args:
+        snake: Snake instance
+        food: Food instance
 
-    Vision example:
+    Returns:
+        Dictionary mapping directions to concatenated vision strings
 
-    {
-        'UP': 'OW',
-        'DOWN': 'S0W',
-        'LEFT': '0W',
-        'RIGHT': '00000000W'
-    }
+    Example:
+        {
+            'UP': 'OW',
+            'DOWN': 'S0W',
+            'LEFT': '0W',
+            'RIGHT': '00000000W'
+        }
     """
     vision = get_vision(snake, food)
-    preprocess_vision = {}
-
-    for dir, values in vision.items():
-        preprocess_vision[dir] = "".join(values)
-    return preprocess_vision
+    return {direction: "".join(values) for direction, values in vision.items()}
 
 
 def print_vision(snake: Snake, food: Food) -> None:

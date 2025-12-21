@@ -93,15 +93,14 @@ class Display:
                      Config.GRID_BLOCK_SIZE.value))
 
     def __get_snake_sprite_rotation_angle(self, snake: Snake) -> int:
-        """Return the rotation angle based on the snake's direction"""
-        if snake.get_direction() == (0, -1):  # Up
-            return 0
-        elif snake.get_direction() == (-1, 0):  # Left
-            return 90
-        elif snake.get_direction() == (0, 1):  # Down
-            return 180
-        elif snake.get_direction() == (1, 0):  # Right
-            return 270
+        """Return the rotation angle based on the snake's direction."""
+        direction_angles = {
+            (0, -1): 0,   # Up
+            (-1, 0): 90,  # Left
+            (0, 1): 180,  # Down
+            (1, 0): 270   # Right
+        }
+        return direction_angles.get(snake.get_direction(), 0)
 
     def __change_ticks(self, change: int) -> None:
         """Change the game speed"""
@@ -146,29 +145,20 @@ class Display:
                     self.__step_by_step_update = True
 
     def draw_grid(self) -> None:
-        """Draw a checkerboard background on the screen"""
+        """Draw a checkerboard background on the screen."""
+        LIGHT_GRAY = (169, 169, 169)
+        DARK_GRAY = (105, 105, 105)
 
-        light_gray = (169, 169, 169)  # Light gray
-        dark_gray = (105, 105, 105)   # Dark gray
-
-        for y in range(0, Config.GRID_HEIGHT.value):
-            for x in range(0, Config.GRID_WIDTH.value):
-                if (x + y) % 2 == 0:
-                    pygame.draw.rect(
-                        self.screen, light_gray,
-                        pygame.Rect(
-                            x * Config.GRID_BLOCK_SIZE.value,
-                            y * Config.GRID_BLOCK_SIZE.value,
-                            Config.GRID_BLOCK_SIZE.value,
-                            Config.GRID_BLOCK_SIZE.value))
-                else:
-                    pygame.draw.rect(
-                        self.screen, dark_gray,
-                        pygame.Rect(
-                            x * Config.GRID_BLOCK_SIZE.value,
-                            y * Config.GRID_BLOCK_SIZE.value,
-                            Config.GRID_BLOCK_SIZE.value,
-                            Config.GRID_BLOCK_SIZE.value))
+        for y in range(Config.GRID_HEIGHT.value):
+            for x in range(Config.GRID_WIDTH.value):
+                color = LIGHT_GRAY if (x + y) % 2 == 0 else DARK_GRAY
+                pygame.draw.rect(
+                    self.screen, color,
+                    pygame.Rect(
+                        x * Config.GRID_BLOCK_SIZE.value,
+                        y * Config.GRID_BLOCK_SIZE.value,
+                        Config.GRID_BLOCK_SIZE.value,
+                        Config.GRID_BLOCK_SIZE.value))
 
     def __get_centered_position(self, text_surface, block_x: int,
                                 block_y: int) -> tuple[int, int]:
@@ -182,17 +172,23 @@ class Display:
         return x, y
 
     def __get_colored_text(self, coef: float) -> pygame.Surface:
-        """Return colored text based on the value
-        (red if negative, yellow if neutral, green if positive)"""
+        """Return colored text based on the coefficient value.
+
+        Red for negative values (< -5), green for positive (> 5),
+        yellow for neutral.
+        """
+        RED = (255, 0, 0)
+        GREEN = (0, 255, 0)
+        YELLOW = (255, 255, 0)
+
         if coef < -5:
-            return self.font_style.render(
-                f"{coef:.1f}", True, (255, 0, 0))
+            color = RED
         elif coef > 5:
-            return self.font_style.render(
-                f"{coef:.1f}", True, (0, 255, 0))
+            color = GREEN
         else:
-            return self.font_style.render(
-                f"{coef:.1f}", True, (255, 255, 0))
+            color = YELLOW
+
+        return self.font_style.render(f"{coef:.1f}", True, color)
 
     def draw_coefs(self, snake_head: tuple[int, int],
                    coefs: dict[str, float]) -> None:
@@ -217,14 +213,15 @@ class Display:
         self.screen.blit(left_value, left_pos)
 
     def draw_buttons(self) -> None:
-        """Draw the pause and play buttons"""
-        # Draw the buttons
+        """Draw pause/play and speed control buttons."""
+        # Draw pause/play button
         if self.isPause:
-            self.screen.blit(
-                self.button_play_default, self.pause_button_rect)
+            button = self.button_play_default
         else:
-            self.screen.blit(
-                self.button_pause_default, self.play_button_rect)
+            button = self.button_pause_default
+        self.screen.blit(button, self.pause_button_rect)
+
+        # Draw arrow buttons
         self.screen.blit(
             self.button_arrow_left_default, self.arrow_left_button_rect)
         self.screen.blit(
@@ -253,30 +250,29 @@ class Display:
                      y * Config.GRID_BLOCK_SIZE.value))
 
     def draw_food(self, food: Food) -> None:
-        """Draw the apples on the screen."""
-        for food in food.get_food_list():
-            position = food["position"]
+        """Draw the food items on the screen."""
+        for item in food.get_food_list():
             sprite = (
-                self.green_apple_sprite if food["type"] == "green"
+                self.green_apple_sprite if item["type"] == "green"
                 else self.red_apple_sprite
             )
-            x, y = position
+            x, y = item["position"]
             self.screen.blit(
                 sprite, (x * Config.GRID_BLOCK_SIZE.value,
                          y * Config.GRID_BLOCK_SIZE.value))
 
     def draw_score(self, score: int) -> None:
-        """Display the score on the screen"""
-        value = self.font_style.render(
-            f"Score: {score}", True, (255, 255, 255))
-        self.screen.blit(
-            value, [Config.MARGIN.value, Config.MARGIN.value])
+        """Display the score on the screen."""
+        WHITE = (255, 255, 255)
+        value = self.font_style.render(f"Score: {score}", True, WHITE)
+        self.screen.blit(value, [Config.MARGIN.value, Config.MARGIN.value])
 
     def draw_speed(self) -> None:
-        """Display the game speed on the screen"""
+        """Display the game speed on the screen."""
+        WHITE = (255, 255, 255)
         value = self.font_style.render(
             f"Speed: x{Config.FPS.value[self.ticks_index]}",
-            True, (255, 255, 255))
+            True, WHITE)
         self.screen.blit(
             value, [Config.MARGIN.value,
                     Config.WINDOWS_HEIGHT.value -

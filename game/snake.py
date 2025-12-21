@@ -25,10 +25,7 @@ class Snake:
             self.grow()
 
     def __generate_random_position(self) -> list[tuple[int, int]]:
-        """
-        Generate a random position for the snake considering direction and
-        length
-        """
+        """Generate a random starting position for the snake."""
         safe_distance = 0
         x = random.randint(
             safe_distance, Config.GRID_WIDTH.value - 1 - safe_distance
@@ -75,16 +72,15 @@ class Snake:
             self.body.pop()  # Remove the last segment of the snake
             self.length -= 1
 
-    def change_direction(self, new_direction) -> None:
-        """Change the direction of the snake"""
-        if new_direction == "UP":
-            self.direction = (0, -1)
-        elif new_direction == "DOWN":
-            self.direction = (0, 1)
-        elif new_direction == "LEFT":
-            self.direction = (-1, 0)
-        elif new_direction == "RIGHT":
-            self.direction = (1, 0)
+    def change_direction(self, new_direction: str) -> None:
+        """Change the direction of the snake."""
+        direction_map = {
+            "UP": (0, -1),
+            "DOWN": (0, 1),
+            "LEFT": (-1, 0),
+            "RIGHT": (1, 0)
+        }
+        self.direction = direction_map.get(new_direction, self.direction)
 
     def get_head(self) -> tuple[int, int]:
         """Return the position of the snake's head"""
@@ -95,11 +91,12 @@ class Snake:
         return self.body
 
     def is_dead(self) -> str | None:
-        """
-        Check if the snake is dead
+        """Check if the snake is dead.
 
         Returns:
-            str | None: Reason of death or None if alive
+            str: Reason of death ("Poison", "Collision with a wall",
+                 "Collision with yourself")
+            None: If the snake is alive
         """
 
         if self.length == 0:
