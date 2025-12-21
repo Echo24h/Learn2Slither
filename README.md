@@ -1,4 +1,4 @@
-# Learn2Slither 🐍
+# Learn2Slither
 
 A Q-learning agent that learns to play Snake using reinforcement learning.
 
@@ -15,12 +15,12 @@ A Q-learning agent that learns to play Snake using reinforcement learning.
 Learn2Slither is a reinforcement learning project that implements a Q-learning algorithm to teach an AI agent to play the classic Snake game. The agent learns through trial and error, gradually improving its performance over multiple episodes.
 
 ### **Features**
-- 🎮 Interactive visual display with Pygame
-- 🧠 Q-learning algorithm implementation
-- 💾 Save and load trained models
-- ⚡ Adjustable game speed
-- 📊 Real-time performance metrics
-- 🎯 Two types of food (green: grow, red: shrink)
+- Interactive visual display with Pygame
+- Q-learning algorithm implementation
+- Save and load trained models
+- Adjustable game speed
+- Real-time performance metrics
+- Two types of food (green: grow, red: shrink)
 
 ---
 
@@ -148,10 +148,10 @@ The snake perceives its environment through ray-casting in 4 directions, detecti
 
 ### **Learning Parameters**
 Configurable in [config/config.py](config/config.py):
-- Learning rate: 0.1
-- Discount factor: 0.99
-- Exploration rate: 1.0 (decays over time)
-- Exploration decay: 0.999
+- Learning rate
+- Discount factor
+- Exploration rate (decays over time)
+- Exploration decay
 
 ---
 
@@ -175,29 +175,6 @@ The project follows Python best practices:
 - Comprehensive docstrings
 - PEP 8 style compliance
 - Modular architecture
-
-### **Testing**
-Run linting with flake8:
-```bash
-flake8 .
-```
-
----
-
-## **License**
-
-This project is provided as-is for educational purposes.
-
----
-
-## **Contributing**
-
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest new features
-- Submit pull requests
-
----
 
 ## **Acknowledgments**
 
