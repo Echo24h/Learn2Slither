@@ -47,7 +47,7 @@ Learn2Slither is a reinforcement learning project that implements a Q-learning a
    venv\Scripts\activate
 
    # Linux/Mac
-   python3 -m venv venv
+   python3.12 -m venv venv
    source venv/bin/activate
    ```
 
