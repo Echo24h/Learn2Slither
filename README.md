@@ -30,33 +30,26 @@ Learn2Slither is a reinforcement learning project that implements a Q-learning a
 - Python 3.14 or newer
 - pip package manager
 
-> **Note:** The project now uses `pyglet` for display, which is compatible with newer Python versions.
-
 ### **Setup**
 
-1. **Install Python 3.12**
-   ```bash
-   sudo apt install python3.12 python3.12-venv python3.12-dev
-   ``
-
-2. **Clone the repository**
+1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
    cd Learn2Slither
    ```
 
-3. **Create a virtual environment (recommended)**
+2. **Create a virtual environment (recommended)**
    ```bash
    # Windows
-   py -3.12 -m venv venv
+   python -m venv venv
    venv\Scripts\activate
 
    # Linux/Mac
-   python3.12 -m venv venv
+   python3 -m venv venv
    source venv/bin/activate
    ```
 
-4. **Install dependencies**
+3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
