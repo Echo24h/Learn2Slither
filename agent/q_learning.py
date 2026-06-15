@@ -24,8 +24,6 @@ class QLearning:
         self.__visual = visual
         self.__step_by_step = step_by_step
         self.__learn = learn
-        if not learn:
-            self.__q_data.exploration_rate = 0
 
         # Statistics tracking
         self.__stats = TrainingStats()
@@ -44,14 +42,16 @@ class QLearning:
         """Choose the best action based on the Q-table or explore randomly."""
         self.__check_vision(vision)
 
-        if self.__learn and random.random() < self.__q_data.exploration_rate:
+        if random.random() < self.__q_data.exploration_rate:
             return Config.ACTIONS.value[random.choice(
                 range(Config.NUM_ACTIONS.value))]
         else:
-            max_value = np.argmax(
-                [self.__q_data.q_table[value]
-                 for _, value in vision.items()])
-            return Config.ACTIONS.value[max_value]
+            # Choose randomly if multiple actions have the same Q-value
+            max_q = max(self.__q_data.q_table[state]
+                        for state in vision.values())
+            best_actions = [direction for direction, state in vision.items()
+                            if self.__q_data.q_table[state] == max_q]
+            return random.choice(best_actions)
 
     def __check_food_eaten(self, snake: Snake, food: Food) -> int:
         """Check if the snake has eaten food and return the reward."""
@@ -102,7 +102,7 @@ class QLearning:
         if model_file_path:
             self.__q_data = QData(model_file_path)
             if not self.__learn:
-                self.__q_data.exploration_rate = 0
+                self.__q_data.exploration_rate = self.__q_data.min_exploration  # No exploration if not learning
 
     def save_model(self, model_file_path: str = None) -> None:
         """Save the current Q-table to a file."""

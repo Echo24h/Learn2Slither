@@ -33,21 +33,41 @@ class Config(Enum):
     GREEN_APPLE = 2
     RED_APPLE = 1
 
-    # Agent parameters
+
+    # Agent parameters 
     ACTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT']  # Possible actions
     NUM_ACTIONS = len(ACTIONS)
-    LEARNING_RATE = 0.1
-    DISCOUNT_FACTOR = 0.99
-    EXPLORATION_RATE = 1
-    EXPLORATION_DECAY = 0.999  # 0.99
-    MIN_EXPLORATION = 0
     EPISODES = 1  # 1000
+
+
+    # Q-learning parameters (Long-term)
+    # LEARNING_RATE = 0.1
+    # DISCOUNT_FACTOR = 0.99
+    # EXPLORATION_RATE = 1
+    # MIN_EXPLORATION = 0.01 # Final exploration rate after decay
+    # EXPLORATION_DECAY = 0.999  # 0.99
+    # VISION_SIZE = 10 # Size of the vision grid (e.g., 3 for a 3x3 grid around the snake's head)
+    # REWARDS = {
+    #     "GREEN": 10,
+    #     "RED": -10,
+    #     "DEAD": -20,
+    #     "MOVE": -1
+    # }
+
+    # Q-learning parameters (Short-term)
+    LEARNING_RATE = 0.1
+    DISCOUNT_FACTOR = 0.9
+    EXPLORATION_RATE = 1
+    EXPLORATION_DECAY = 0.99
+    MIN_EXPLORATION = 0.01  # Final exploration rate after decay
+    VISION_SIZE = 5  # Size of the vision grid (e.g., 3 for a 3x3 grid around the snake's head)
     REWARDS = {
-        "GREEN": 10,
-        "RED": -10,
-        "DEAD": -20,
+        "GREEN": 50,
+        "RED": -50,
+        "DEAD": -50,
         "MOVE": -1
     }
+
 
     def display(self) -> None:
         """Display the configuration parameters"""

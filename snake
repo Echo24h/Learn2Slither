@@ -72,14 +72,17 @@ if __name__ == "__main__":
     print(f"Step-by-step:  {args.step_by_step}")
     print("=" * 50)
 
-    # Initialize and run the agent
-    agent = QLearning(
-        visual=visual,
-        episodes=args.episodes,
-        step_by_step=args.step_by_step,
-        learn=learn
-    )
+    try:
+        # Initialize and run the agent
+        agent = QLearning(
+            visual=visual,
+            episodes=args.episodes,
+            step_by_step=args.step_by_step,
+            learn=learn
+        )
 
-    agent.load_model(args.load)
-    agent.run()
-    agent.save_model(args.save)
+        agent.load_model(args.load)
+        agent.run()
+        agent.save_model(args.save)
+    except Exception as e:
+        print(f"An error occurred: {e}")

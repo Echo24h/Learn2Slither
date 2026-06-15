@@ -64,11 +64,15 @@ def get_vision(snake: Snake, food: Food) -> dict[str, list[str]]:
     body = snake.get_body()
     food_list = food.get_food_list()
 
+    max_distance = Config.VISION_SIZE.value
+
     for dir, (dx, dy) in direction.items():
         x, y = head_x, head_y
-        while True:
+        distance = 0
+        while distance < max_distance:
             x += dx
             y += dy
+            distance += 1
             if (x < 0 or x >= Config.GRID_WIDTH.value or
                     y < 0 or y >= Config.GRID_HEIGHT.value):
                 vision[dir].append('W')

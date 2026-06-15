@@ -18,6 +18,7 @@ class QData:
         self.exploration_rate = Config.EXPLORATION_RATE.value
         self.exploration_decay = Config.EXPLORATION_DECAY.value
         self.min_exploration = Config.MIN_EXPLORATION.value
+        self.vision_size = Config.VISION_SIZE.value
 
         if model_file_path:
             self.__load_q_data(model_file_path)
@@ -37,6 +38,7 @@ class QData:
                 self.exploration_rate = float(params[3])
                 self.exploration_decay = float(params[4])
                 self.min_exploration = float(params[5])
+                self.vision_size = int(params[6])
 
                 next(reader)  # Skip header
 
@@ -61,7 +63,7 @@ class QData:
                 # Header for parameters
                 writer.writerow([
                     "step", "learning_rate", "discount_factor",
-                    "exploration", "exploration_decay", "min_exploration"
+                    "exploration", "exploration_decay", "min_exploration", "vision_size"
                 ])
 
                 # Write parameters
@@ -71,7 +73,8 @@ class QData:
                     self.discount_factor,
                     self.exploration_rate,
                     self.exploration_decay,
-                    self.min_exploration
+                    self.min_exploration,
+                    self.vision_size
                 ])
 
                 # Header for states and values
