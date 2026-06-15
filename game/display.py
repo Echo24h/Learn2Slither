@@ -63,6 +63,8 @@ class Display:
             Config.GRID_BLOCK_SIZE.value,
             Config.GRID_BLOCK_SIZE.value,
         )
+        # Alias explicite : meme zone que pause_button_rect, le bouton
+        # play est dessine au meme endroit que le bouton pause.
         self.play_button_rect = self.pause_button_rect
 
         self.arrow_left_button_rect = (
@@ -82,6 +84,9 @@ class Display:
 
     def __load_texture(self, path):
         texture = pyglet.image.load(path).get_texture()
+        if texture.width == 0 or texture.height == 0:
+            raise ValueError(f"Invalid texture loaded from {path!r}: "
+                             f"size is {texture.width}x{texture.height}")
         texture.anchor_x = texture.width // 2
         texture.anchor_y = texture.height // 2
         return texture
@@ -115,19 +120,29 @@ class Display:
         if symbol == key.ESCAPE:
             self.close()
         elif symbol == key.SPACE:
-            self.isPause = not self.isPause
             if self.__step_by_step:
                 self.__step_by_step_update = True
+            else:
+                self.isPause = not self.isPause
+                self.__last_frame_time = time.perf_counter()
         elif symbol == key.LEFT:
             self.__change_ticks(-1)
         elif symbol == key.RIGHT:
             self.__change_ticks(1)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if button != mouse.LEFT or self.__step_by_step:
+        if button != mouse.LEFT:
             return
         if self.__rect_contains(self.pause_button_rect, x, y):
-            self.isPause = not self.isPause
+            if self.__step_by_step:
+                self.__step_by_step_update = True
+            else:
+                self.isPause = not self.isPause
+                self.__last_frame_time = time.perf_counter()
+        elif self.__step_by_step:
+            # En mode pas-a-pas, seul le bouton pause/play est actif :
+            # les fleches de vitesse n'ont pas de sens ici.
+            return
         elif self.__rect_contains(self.arrow_left_button_rect, x, y):
             self.__change_ticks(-1)
         elif self.__rect_contains(self.arrow_right_button_rect, x, y):
@@ -143,9 +158,16 @@ class Display:
         return direction_angles.get(snake.get_direction(), 0)
 
     def __change_ticks(self, change: int) -> None:
-        if ((change == -1 and self.ticks_index > -2) or
-                (change == 1 and self.ticks_index < 3)):
-            self.ticks_index += change
+        # ticks_index doit rester un index valide dans Config.FPS.value
+        # (suppose ici 4 entrees, indices 0..3 ; bornes -1..2).
+        min_index = -1
+        max_index = len(Config.FPS.value) - 2
+        new_index = self.ticks_index + change
+        if min_index <= new_index <= max_index:
+            self.ticks_index = new_index
+            # Repartir d'un timing propre : evite le decalage d'1 frame
+            # du au "elapsed" calcule sur l'ancienne vitesse.
+            self.__last_frame_time = time.perf_counter()
 
     def __handle_events(self) -> None:
         if self.__is_closed:
@@ -219,7 +241,8 @@ class Display:
         right_value.x, right_value.y = right_pos
         left_value.x, left_value.y = left_pos
 
-        # Draw the coefficients only if they are within the grid boundaries
+        # Ne dessiner que les coefficients qui restent dans la grille
+        # de jeu, pour ne pas deborder sur le panneau d'info ou hors fenetre.
         if snake_head[1] - 1 >= 0:
             up_value.draw()
         if snake_head[1] + 1 < Config.GRID_HEIGHT.value:
@@ -230,6 +253,18 @@ class Display:
             left_value.draw()
 
     def draw_buttons(self) -> None:
+
+        if self.__step_by_step:
+            texture = self.button_play_default
+            step_sprite = pyglet.sprite.Sprite(
+                texture,
+                x=self.pause_button_rect[0] + Config.GRID_BLOCK_SIZE.value / 2,
+                y=self.pause_button_rect[1] + Config.GRID_BLOCK_SIZE.value / 2
+            )
+            step_sprite.scale = Config.GRID_BLOCK_SIZE.value / texture.width
+            step_sprite.draw()
+            return  # In step-by-step mode, only the play button is drawn.        
+
         if self.isPause:
             texture = self.button_play_default
         else:
@@ -316,7 +351,6 @@ class Display:
             anchor_y='bottom'
         )
         value.draw()
-
 
     def update_display(self, snake: Snake, food: Food,
                        coefs: dict[str, float]) -> bool:
