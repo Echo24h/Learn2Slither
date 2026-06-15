@@ -53,29 +53,29 @@ class Config(Enum):
     # }
 
     # Q-learning parameters (Mid-term ~ 1 000 episodes)
-    # LEARNING_RATE = 0.1
-    # DISCOUNT_FACTOR = 0.9
-    # EXPLORATION_RATE = 1
-    # EXPLORATION_DECAY = 0.99
-    # MIN_EXPLORATION = 0.01
-    # VISION_SIZE = 5
-    # REWARDS = {
-    #     "GREEN": 15,
-    #     "RED": -15,
-    #     "DEAD": -30,
-    #     "MOVE": -1
-    # }
+    LEARNING_RATE = 0.1
+    DISCOUNT_FACTOR = 0.9
+    EXPLORATION_RATE = 1
+    EXPLORATION_DECAY = 0.99
+    MIN_EXPLORATION = 0.01
+    VISION_SIZE = 5
+    REWARDS = {
+        "GREEN": 15,
+        "RED": -15,
+        "DEAD": -30,
+        "MOVE": -1
+    }
 
     # Q-learning parameters (Short-term ~ 100 episodes)
-    LEARNING_RATE = 0.1
-    DISCOUNT_FACTOR = 0.8
-    EXPLORATION_RATE = 1
-    EXPLORATION_DECAY = 0.95
-    MIN_EXPLORATION = 0.01
-    VISION_SIZE = 3
-    REWARDS = {
-        "GREEN": 20,
-        "RED": -20,
-        "DEAD": -50,
-        "MOVE": -0.5
-    }
+    # LEARNING_RATE = 0.1
+    # DISCOUNT_FACTOR = 0.8
+    # EXPLORATION_RATE = 1
+    # EXPLORATION_DECAY = 0.95
+    # MIN_EXPLORATION = 0.01
+    # VISION_SIZE = 3
+    # REWARDS = {
+    #     "GREEN": 20,
+    #     "RED": -20,
+    #     "DEAD": -50,
+    #     "MOVE": -0.5
+    # }

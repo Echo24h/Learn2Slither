@@ -29,12 +29,14 @@ def is_food_position(x: int, y: int, food_list: list) -> str | bool:
     return False
 
 
-def get_vision(snake: Snake, food: Food) -> dict[str, list[str]]:
+def get_vision(
+        snake: Snake, food: Food, vision_size: int) -> dict[str, list[str]]:
     """Return the vision of the snake in all four directions.
 
     Args:
         snake: Snake instance
         food: Food instance
+        vision_size: Number of cells the snake can see in each direction
 
     Returns:
         Dictionary mapping directions to lists of visible elements
@@ -64,7 +66,7 @@ def get_vision(snake: Snake, food: Food) -> dict[str, list[str]]:
     body = snake.get_body()
     food_list = food.get_food_list()
 
-    max_distance = Config.VISION_SIZE.value
+    max_distance = vision_size
 
     for dir, (dx, dy) in direction.items():
         x, y = head_x, head_y
@@ -87,12 +89,14 @@ def get_vision(snake: Snake, food: Food) -> dict[str, list[str]]:
     return vision
 
 
-def get_preprocess_vision(snake: Snake, food: Food) -> dict[str, str]:
+def get_preprocess_vision(
+        snake: Snake, food: Food, vision_size: int) -> dict[str, str]:
     """Return the preprocessed (flattened) vision of the snake.
 
     Args:
         snake: Snake instance
         food: Food instance
+        vision_size: Number of cells the snake can see in each direction
 
     Returns:
         Dictionary mapping directions to concatenated vision strings
@@ -105,7 +109,7 @@ def get_preprocess_vision(snake: Snake, food: Food) -> dict[str, str]:
             'RIGHT': '00000000W'
         }
     """
-    vision = get_vision(snake, food)
+    vision = get_vision(snake, food, vision_size)
     return {direction: "".join(values) for direction, values in vision.items()}
 
 
@@ -131,13 +135,15 @@ def remove_rear_vision(snake: Snake, vision: dict[str, str]) -> dict[str, str]:
     return vision
 
 
-def print_vision(snake: Snake, food: Food) -> None:
+def print_vision(snake: Snake, food: Food, vision_size: int) -> None:
     """
     Print the current vision of the snake in the console.
 
     Parameters:
     - snake (Snake): Instance of the snake
     - food (Food): Instance of the food
+    - vision_size (int): Number of cells the snake can see in each direction
+
     Return:
     - None
 
@@ -168,7 +174,7 @@ def print_vision(snake: Snake, food: Food) -> None:
     x_head, y_head = snake.get_head()
     snake_body = snake.get_body()
     food_list = food.get_food_list()
-    max_distance = Config.VISION_SIZE.value
+    max_distance = vision_size
 
     while y < Config.GRID_HEIGHT.value + 1:
         while x < Config.GRID_WIDTH.value + 1:

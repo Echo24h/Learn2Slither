@@ -134,13 +134,13 @@ class QLearning:
             for episode in range(self.__episodes):
                 snake = Snake()
                 food = Food(snake.get_body())
-                vision = get_preprocess_vision(snake, food)
+                vision = get_preprocess_vision(snake, food, self.__q_data.vision_size)
                 done = False
                 steps = 0
 
                 while not done:
                     if self.__vision:
-                        print_vision(snake, food)
+                        print_vision(snake, food, self.__q_data.vision_size)
                     action = self.__choose_action(snake, vision)
                     state = vision[action]
 
@@ -155,7 +155,7 @@ class QLearning:
 
                     reward, done = self.__step(action, snake, food)
 
-                    next_vision = get_preprocess_vision(snake, food)
+                    next_vision = get_preprocess_vision(snake, food, self.__q_data.vision_size)
                     self.__check_vision(next_vision)
 
                     if self.__learn:
