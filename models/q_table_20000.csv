@@ -1,5 +1,5 @@
 step,learning_rate,discount_factor,exploration,exploration_decay,min_exploration,vision_size
-0,0.1,0.999,0.0001,0.999,0.0001,10
+0,0.1,0.999,0.0001,0.999,0.01,10
 state,value
 G000000W,19.891872861256065
 00W,5.605887610075425

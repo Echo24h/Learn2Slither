@@ -5,10 +5,12 @@ A Q-learning agent that learns to play Snake using reinforcement learning.
 <p align="center">
   <img src="https://i.ibb.co/ccTmPP0r/Capture-d-cran-du-2025-02-27-15-02-15.png"
        alt="Learn2Slither Screenshot"
-       width="400px">
+       width="300px">
+   <img src="models/q_table_100.png"
+       alt="Learn2Slither Training Statistics"
+       width="300px">
 </p>
 
----
 
 ## **Overview**
 
@@ -19,10 +21,7 @@ Learn2Slither is a reinforcement learning project that implements a Q-learning a
 - Q-learning algorithm implementation
 - Save and load trained models
 - Adjustable game speed
-- Real-time performance metrics
-- Two types of food (green: grow, red: shrink)
-
----
+- Training statistics
 
 ## **Installation**
 
@@ -54,14 +53,23 @@ Learn2Slither is a reinforcement learning project that implements a Q-learning a
    pip install -r requirements.txt
    ```
 
----
-
 ## **Usage**
 
 ### **Basic Command**
 ```bash
 ./snake [options]
 ```
+
+### **Controls (Visual Mode)**
+
+- **Space**: Pause/Resume
+- **Left Arrow**: Decrease game speed
+- **Right Arrow**: Increase game speed
+- **Escape**: Quit game
+
+In step-by-step mode:
+- **Space**: Advance to next step
+
 
 ### **Available Options**
 | Option | Description | Default |
@@ -96,85 +104,7 @@ Learn2Slither is a reinforcement learning project that implements a Q-learning a
 ./snake -visual off -episodes 10000 -save models/trained_model.csv
 ```
 
----
-
-## **Project Structure**
-
-```
-Learn2Slither/
-├── agent/
-│   ├── __init__.py
-│   ├── q_learning.py      # Q-learning algorithm implementation
-│   ├── q_data.py          # Q-table management
-│   └── vision.py          # Snake vision processing
-├── config/
-│   ├── __init__.py
-│   └── config.py          # Game and learning parameters
-├── game/
-│   ├── __init__.py
-│   ├── snake.py           # Snake logic
-│   ├── food.py            # Food management
-│   └── display.py         # pyglet visualization
-├── assets/                # Sprites and images
-├── models/                # Saved Q-tables
-├── snake                  # Main entry point
-├── requirements.txt       # Python dependencies
-└── README.md
-```
-
----
-
-## **How It Works**
-
-### **Q-Learning Algorithm**
-The agent uses Q-learning, a model-free reinforcement learning algorithm:
-- **State**: The snake's vision in 4 directions (UP, DOWN, LEFT, RIGHT)
-- **Actions**: Move in one of the 4 directions
-- **Rewards**:
-  - Green food: +10
-  - Red food: -10
-  - Wall/Self collision: -20
-  - Regular move: -1
-
-### **Vision System**
-The snake perceives its environment through ray-casting in 4 directions, detecting:
-- Walls (W)
-- Own body (S)
-- Green food (G)
-- Red food (R)
-- Empty space (0)
-
 ### **Learning Parameters**
 Configurable in [config/config.py](config/config.py):
-- Learning rate
-- Discount factor
-- Exploration rate (decays over time)
-- Exploration decay
 
----
 
-## **Controls (Visual Mode)**
-
-- **Space**: Pause/Resume
-- **Left Arrow**: Decrease game speed
-- **Right Arrow**: Increase game speed
-- **Escape**: Quit game
-
-In step-by-step mode:
-- **Space**: Advance to next step
-
----
-
-## **Development**
-
-### **Code Quality**
-The project follows Python best practices:
-- Type hints for better code clarity
-- Comprehensive docstrings
-- PEP 8 style compliance
-- Modular architecture
-
-## **Acknowledgments**
-
-- Pygame community for the excellent game development framework
-- Q-learning algorithm based on classical reinforcement learning literature
