@@ -49,12 +49,23 @@ class TrainingStats:
         episodes = np.array(range(1, len(self.__scores) + 1))
 
         # Score per episode
-        ax1.plot(episodes, self.__scores, color='#3498db', linewidth=1.2, alpha=0.7)
+        ax1.plot(
+            episodes, self.__scores, color='#3498db',
+            linewidth=1.2,
+            alpha=0.7
+            )
 
         if len(self.__scores) > 20:
             window = min(50, len(self.__scores) // 10)
-            moving_avg = np.convolve(self.__scores, np.ones(window)/window, mode='valid')
-            ax1.plot(range(window, len(self.__scores) + 1), moving_avg, color='#e74c3c', linewidth=2, label='Average')
+            moving_avg = np.convolve(
+                self.__scores, np.ones(window)/window, mode='valid'
+                )
+            ax1.plot(
+                range(window, len(self.__scores) + 1),
+                moving_avg, color='#e74c3c',
+                linewidth=2,
+                label='Average'
+                )
             ax1.legend(loc='best', frameon=False, fontsize=9)
 
         ax1.set_ylabel('Score', fontsize=10, fontweight='bold')
@@ -64,7 +75,9 @@ class TrainingStats:
         ax1.spines['right'].set_visible(False)
 
         # Steps per episode
-        ax2.plot(episodes, self.__steps_per_episode, color='#2ecc71', linewidth=1.2)
+        ax2.plot(
+            episodes, self.__steps_per_episode, color='#2ecc71', linewidth=1.2
+        )
         ax2.set_xlabel('Episode', fontsize=10, fontweight='bold')
         ax2.set_ylabel('Steps', fontsize=10, fontweight='bold')
         ax2.set_title('Episode Duration', fontsize=11, pad=8)
@@ -73,7 +86,9 @@ class TrainingStats:
         ax2.spines['right'].set_visible(False)
 
         # Exploration rate per episode
-        ax3.plot(episodes, self.__exploration_rates, color='#f39c12', linewidth=1.5)
+        ax3.plot(
+            episodes, self.__exploration_rates, color='#f39c12', linewidth=1.5
+        )
         ax3.set_xlabel('Episode', fontsize=10, fontweight='bold')
         ax3.set_ylabel('Exploration', fontsize=10, fontweight='bold')
         ax3.set_title('Exploration Rate', fontsize=11, pad=8)

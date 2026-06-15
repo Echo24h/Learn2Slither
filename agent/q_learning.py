@@ -7,9 +7,11 @@ from .q_data import QData
 from .vision import get_preprocess_vision, print_vision, remove_rear_vision
 from .training_stats import TrainingStats
 
+
 class QLearningError(Exception):
     """Custom exception for Q-learning errors."""
     pass
+
 
 class QLearning:
     """
@@ -52,10 +54,14 @@ class QLearning:
         vision = remove_rear_vision(snake, vision)
         possible_actions = list(vision.keys())
         if random.random() < self.__q_data.exploration_rate:
-            return possible_actions[random.choice(range(len(possible_actions)))]
+            return possible_actions[
+                random.choice(range(len(possible_actions)))
+                ]
         else:
             # Choose randomly if multiple actions have the same Q-value
-            max_q = max(self.__q_data.q_table[state] for state in vision.values())
+            max_q = max(
+                self.__q_data.q_table[state] for state in vision.values()
+                )
             best_actions = [
                 direction for direction, state in vision.items()
                 if self.__q_data.q_table[state] == max_q
@@ -111,7 +117,8 @@ class QLearning:
         if model_file_path:
             self.__q_data = QData(model_file_path)
             if not self.__learn:
-                self.__q_data.exploration_rate = self.__q_data.min_exploration  # No exploration if not learning
+                # No exploration if not learning
+                self.__q_data.exploration_rate = self.__q_data.min_exploration
 
     def save_model(self, model_file_path: str = None) -> None:
         """Save the current Q-table to a file."""

@@ -108,6 +108,7 @@ def get_preprocess_vision(snake: Snake, food: Food) -> dict[str, str]:
     vision = get_vision(snake, food)
     return {direction: "".join(values) for direction, values in vision.items()}
 
+
 def remove_rear_vision(snake: Snake, vision: dict[str, str]) -> dict[str, str]:
     """Remove the rear vision of the snake based on its current direction.
 
@@ -128,6 +129,7 @@ def remove_rear_vision(snake: Snake, vision: dict[str, str]) -> dict[str, str]:
     elif current_direction == (1, 0):  # RIGHT
         del vision["LEFT"]
     return vision
+
 
 def print_vision(snake: Snake, food: Food) -> None:
     """
@@ -170,7 +172,9 @@ def print_vision(snake: Snake, food: Food) -> None:
 
     while y < Config.GRID_HEIGHT.value + 1:
         while x < Config.GRID_WIDTH.value + 1:
-            if (x == x_head or y == y_head) and abs(x - x_head) <= max_distance and abs(y - y_head) <= max_distance:
+            if (x == x_head or y == y_head) \
+                and abs(x - x_head) <= max_distance \
+                    and abs(y - y_head) <= max_distance:
                 if (x == -1 or x == Config.GRID_WIDTH.value or
                         y == -1 or y == Config.GRID_HEIGHT.value):
                     print("W", end=" ")

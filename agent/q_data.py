@@ -62,8 +62,13 @@ class QData:
 
                 # Header for parameters
                 writer.writerow([
-                    "step", "learning_rate", "discount_factor",
-                    "exploration", "exploration_decay", "min_exploration", "vision_size"
+                    "step",
+                    "learning_rate",
+                    "discount_factor",
+                    "exploration_rate",
+                    "exploration_decay",
+                    "min_exploration",
+                    "vision_size"
                 ])
 
                 # Write parameters

@@ -41,8 +41,10 @@ class Display:
         self.snake_body_texture = self.__load_texture(
             'assets/snake_body_' + Config.SNAKE_COLOR.value + '.png'
         )
-        self.red_apple_texture = self.__load_texture('assets/red_apple.png')
-        self.green_apple_texture = self.__load_texture('assets/green_apple.png')
+        self.red_apple_texture = self.__load_texture(
+            'assets/red_apple.png')
+        self.green_apple_texture = self.__load_texture(
+            'assets/green_apple.png')
 
         self.button_arrow_left_default = self.__load_texture(
             'assets/button_arrow_left_default.png'
@@ -100,8 +102,10 @@ class Display:
                         rotation: float = 0.0):
         sprite = pyglet.sprite.Sprite(
             texture,
-            x=grid_x * Config.GRID_BLOCK_SIZE.value +
-              Config.GRID_BLOCK_SIZE.value / 2,
+            x=(
+                grid_x * Config.GRID_BLOCK_SIZE.value
+                + Config.GRID_BLOCK_SIZE.value / 2
+                ),
             y=self.__logical_y(grid_y) + Config.GRID_BLOCK_SIZE.value / 2
         )
         sprite.scale = Config.GRID_BLOCK_SIZE.value / texture.width
@@ -220,8 +224,11 @@ class Display:
             anchor_y='baseline'
         )
 
-    def draw_coefs(self, snake_head: tuple[int, int],
-                coefs: dict[str, float]) -> None:
+    def draw_coefs(
+            self,
+            snake_head: tuple[int, int],
+            coefs: dict[str, float]
+            ) -> None:
         x, y = snake_head
         directions = {
             'UP': ((x, y - 1), y - 1 >= 0),
@@ -248,7 +255,7 @@ class Display:
             )
             step_sprite.scale = Config.GRID_BLOCK_SIZE.value / texture.width
             step_sprite.draw()
-            return  # In step-by-step mode, only the play button is drawn.        
+            return  # In step-by-step mode, only the play button is drawn.
 
         if self.isPause:
             texture = self.button_play_default
@@ -265,18 +272,35 @@ class Display:
 
         left_sprite = pyglet.sprite.Sprite(
             self.button_arrow_left_default,
-            x=self.arrow_left_button_rect[0] + Config.GRID_BLOCK_SIZE.value / 2,
-            y=self.arrow_left_button_rect[1] + Config.GRID_BLOCK_SIZE.value / 2
+            x=(
+                self.arrow_left_button_rect[0]
+                + Config.GRID_BLOCK_SIZE.value / 2
+            ),
+            y=(
+                self.arrow_left_button_rect[1]
+                + Config.GRID_BLOCK_SIZE.value / 2
+            )
         )
-        left_sprite.scale = Config.GRID_BLOCK_SIZE.value / self.button_arrow_left_default.width
+        left_sprite.scale = (
+            Config.GRID_BLOCK_SIZE.value / self.button_arrow_left_default.width
+        )
         left_sprite.draw()
 
         right_sprite = pyglet.sprite.Sprite(
             self.button_arrow_right_default,
-            x=self.arrow_right_button_rect[0] + Config.GRID_BLOCK_SIZE.value / 2,
-            y=self.arrow_right_button_rect[1] + Config.GRID_BLOCK_SIZE.value / 2
+            x=(
+                self.arrow_right_button_rect[0]
+                + Config.GRID_BLOCK_SIZE.value / 2
+            ),
+            y=(
+                self.arrow_right_button_rect[1]
+                + Config.GRID_BLOCK_SIZE.value / 2
+            )
         )
-        right_sprite.scale = Config.GRID_BLOCK_SIZE.value / self.button_arrow_right_default.width
+        right_sprite.scale = (
+            Config.GRID_BLOCK_SIZE.value
+            / self.button_arrow_right_default.width
+        )
         right_sprite.draw()
 
     def draw_snake(self, snake: Snake) -> None:

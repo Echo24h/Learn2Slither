@@ -33,12 +33,10 @@ class Config(Enum):
     GREEN_APPLE = 2
     RED_APPLE = 1
 
-
-    # Agent parameters 
+    # Agent parameters
     ACTIONS = ['UP', 'DOWN', 'LEFT', 'RIGHT']  # Possible actions
     NUM_ACTIONS = len(ACTIONS)
     EPISODES = 1  # 1000
-
 
     # Q-learning parameters (Long-term ~ 20 000 episodes)
     # LEARNING_RATE = 0.1 # Learning rate (alpha)
