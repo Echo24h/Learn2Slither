@@ -146,10 +146,11 @@ def print_vision(snake: Snake, food: Food) -> None:
     x_head, y_head = snake.get_head()
     snake_body = snake.get_body()
     food_list = food.get_food_list()
+    max_distance = Config.VISION_SIZE.value
 
     while y < Config.GRID_HEIGHT.value + 1:
         while x < Config.GRID_WIDTH.value + 1:
-            if x == x_head or y == y_head:
+            if (x == x_head or y == y_head) and abs(x - x_head) <= max_distance and abs(y - y_head) <= max_distance:
                 if (x == -1 or x == Config.GRID_WIDTH.value or
                         y == -1 or y == Config.GRID_HEIGHT.value):
                     print("W", end=" ")
