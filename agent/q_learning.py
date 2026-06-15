@@ -1,6 +1,5 @@
 import random
 import numpy as np
-import pygame
 
 from config import Config
 from game import Snake, Food, Display
@@ -164,8 +163,6 @@ class QLearning:
 
         except KeyboardInterrupt:
             print("\nTraining interrupted by user (Ctrl+C)")
-        except pygame.error:
-            print("\nTraining interrupted: Game display closed")
         except Exception as e:
             print(f"\nAn error occurred: {e}")
 

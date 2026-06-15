@@ -1,4 +1,7 @@
+import os
+
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
 
@@ -25,12 +28,13 @@ class TrainingStats:
             print("No statistics to plot.")
             return
 
-        # Create compact figure in 2x2 grid
-        fig = plt.figure(figsize=(10, 8))
-        gs = fig.add_gridspec(2, 2, hspace=0.3, wspace=0.3)
-        ax1 = fig.add_subplot(gs[0, :])  # Score spans top row
-        ax2 = fig.add_subplot(gs[1, 0])  # Steps bottom left
-        ax3 = fig.add_subplot(gs[1, 1])  # Exploration bottom right
+        # Set up the figure and subplots
+        fig = plt.figure(figsize=(10, 10))
+        gs = fig.add_gridspec(3, 1, hspace=0.4)
+
+        ax1 = fig.add_subplot(gs[0, 0])  # Ligne 1 : Score
+        ax2 = fig.add_subplot(gs[1, 0])  # Ligne 2 : Steps
+        ax3 = fig.add_subplot(gs[2, 0])  # Ligne 3 : Exploration
 
         fig.patch.set_facecolor('white')
 
@@ -44,20 +48,13 @@ class TrainingStats:
 
         episodes = np.array(range(1, len(self.__scores) + 1))
 
-        # ===== Plot 1: Score =====
-        ax1.plot(
-            episodes, self.__scores, color='#3498db', linewidth=1.2, alpha=0.7
-        )
+        # Score per episode
+        ax1.plot(episodes, self.__scores, color='#3498db', linewidth=1.2, alpha=0.7)
 
         if len(self.__scores) > 20:
             window = min(50, len(self.__scores) // 10)
-            moving_avg = np.convolve(
-                self.__scores, np.ones(window)/window, mode='valid'
-            )
-            ax1.plot(
-                range(window, len(self.__scores) + 1),
-                moving_avg, color='#e74c3c', linewidth=2, label='Average'
-            )
+            moving_avg = np.convolve(self.__scores, np.ones(window)/window, mode='valid')
+            ax1.plot(range(window, len(self.__scores) + 1), moving_avg, color='#e74c3c', linewidth=2, label='Average')
             ax1.legend(loc='best', frameon=False, fontsize=9)
 
         ax1.set_ylabel('Score', fontsize=10, fontweight='bold')
@@ -66,11 +63,8 @@ class TrainingStats:
         ax1.spines['top'].set_visible(False)
         ax1.spines['right'].set_visible(False)
 
-        # ===== Plot 2: Steps =====
-        ax2.plot(
-            episodes, self.__steps_per_episode, color='#2ecc71', linewidth=1.2
-        )
-
+        # Steps per episode
+        ax2.plot(episodes, self.__steps_per_episode, color='#2ecc71', linewidth=1.2)
         ax2.set_xlabel('Episode', fontsize=10, fontweight='bold')
         ax2.set_ylabel('Steps', fontsize=10, fontweight='bold')
         ax2.set_title('Episode Duration', fontsize=11, pad=8)
@@ -78,11 +72,8 @@ class TrainingStats:
         ax2.spines['top'].set_visible(False)
         ax2.spines['right'].set_visible(False)
 
-        # ===== Plot 3: Exploration =====
-        ax3.plot(
-            episodes, self.__exploration_rates, color='#f39c12', linewidth=1.5
-        )
-
+        # Exploration rate per episode
+        ax3.plot(episodes, self.__exploration_rates, color='#f39c12', linewidth=1.5)
         ax3.set_xlabel('Episode', fontsize=10, fontweight='bold')
         ax3.set_ylabel('Exploration', fontsize=10, fontweight='bold')
         ax3.set_title('Exploration Rate', fontsize=11, pad=8)
@@ -90,7 +81,17 @@ class TrainingStats:
         ax3.spines['top'].set_visible(False)
         ax3.spines['right'].set_visible(False)
 
-        plt.show()
+        backend = matplotlib.get_backend().lower()
+        display_available = os.environ.get('DISPLAY') is not None
+
+        if backend == 'agg' or not display_available:
+            output_path = 'training_stats.png'
+            fig.savefig(output_path, dpi=150, bbox_inches='tight')
+            print(f"Training plot saved to {output_path}")
+        else:
+            plt.show()
+
+        plt.close(fig)
 
     def get_summary(self) -> dict:
         """Return a summary of training statistics."""

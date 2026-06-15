@@ -15,7 +15,7 @@ A Q-learning agent that learns to play Snake using reinforcement learning.
 Learn2Slither is a reinforcement learning project that implements a Q-learning algorithm to teach an AI agent to play the classic Snake game. The agent learns through trial and error, gradually improving its performance over multiple episodes.
 
 ### **Features**
-- Interactive visual display with Pygame
+- Interactive visual display with pyglet
 - Q-learning algorithm implementation
 - Save and load trained models
 - Adjustable game speed
@@ -27,20 +27,25 @@ Learn2Slither is a reinforcement learning project that implements a Q-learning a
 ## **Installation**
 
 ### **Prerequisites**
-- Python 3.12 (recommended)
+- Python 3.14 or newer
 - pip package manager
 
-> **Note:** Python 3.14+ is not compatible with Pygame. Use Python 3.12 or earlier.
+> **Note:** The project now uses `pyglet` for display, which is compatible with newer Python versions.
 
 ### **Setup**
 
-1. **Clone the repository**
+1. **Install Python 3.12**
+   ```bash
+   sudo apt install python3.12 python3.12-venv python3.12-dev
+   ``
+
+2. **Clone the repository**
    ```bash
    git clone <your-repo-url>
    cd Learn2Slither
    ```
 
-2. **Create a virtual environment (recommended)**
+3. **Create a virtual environment (recommended)**
    ```bash
    # Windows
    py -3.12 -m venv venv
@@ -51,7 +56,7 @@ Learn2Slither is a reinforcement learning project that implements a Q-learning a
    source venv/bin/activate
    ```
 
-3. **Install dependencies**
+4. **Install dependencies**
    ```bash
    pip install -r requirements.txt
    ```
@@ -116,7 +121,7 @@ Learn2Slither/
 │   ├── __init__.py
 │   ├── snake.py           # Snake logic
 │   ├── food.py            # Food management
-│   └── display.py         # Pygame visualization
+│   └── display.py         # pyglet visualization
 ├── assets/                # Sprites and images
 ├── models/                # Saved Q-tables
 ├── snake                  # Main entry point
