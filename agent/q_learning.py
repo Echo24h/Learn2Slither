@@ -4,9 +4,12 @@ import numpy as np
 from config import Config
 from game import Snake, Food, Display
 from .q_data import QData
-from .vision import get_preprocess_vision, print_vision
+from .vision import get_preprocess_vision, print_vision, remove_rear_vision
 from .training_stats import TrainingStats
 
+class QLearningError(Exception):
+    """Custom exception for Q-learning errors."""
+    pass
 
 class QLearning:
     """
@@ -42,19 +45,21 @@ class QLearning:
         return {direction: self.__q_data.q_table[state]
                 for direction, state in vision.items()}
 
-    def __choose_action(self, vision: dict[str, str]) -> str:
+    def __choose_action(self, snake: Snake, vision: dict[str, str]) -> str:
         """Choose the best action based on the Q-table or explore randomly."""
         self.__check_vision(vision)
-
+        # Remove rear vision to prevent the snake from seeing behind itself
+        vision = remove_rear_vision(snake, vision)
+        possible_actions = list(vision.keys())
         if random.random() < self.__q_data.exploration_rate:
-            return Config.ACTIONS.value[random.choice(
-                range(Config.NUM_ACTIONS.value))]
+            return possible_actions[random.choice(range(len(possible_actions)))]
         else:
             # Choose randomly if multiple actions have the same Q-value
-            max_q = max(self.__q_data.q_table[state]
-                        for state in vision.values())
-            best_actions = [direction for direction, state in vision.items()
-                            if self.__q_data.q_table[state] == max_q]
+            max_q = max(self.__q_data.q_table[state] for state in vision.values())
+            best_actions = [
+                direction for direction, state in vision.items()
+                if self.__q_data.q_table[state] == max_q
+                ]
             return random.choice(best_actions)
 
     def __check_food_eaten(self, snake: Snake, food: Food) -> int:
@@ -129,7 +134,7 @@ class QLearning:
                 while not done:
                     if self.__vision:
                         print_vision(snake, food)
-                    action = self.__choose_action(vision)
+                    action = self.__choose_action(snake, vision)
                     state = vision[action]
 
                     if self.__visual:
@@ -171,9 +176,10 @@ class QLearning:
                       f"Exploration: {self.__q_data.exploration_rate:.4f}")
 
         except KeyboardInterrupt:
-            print("\nTraining interrupted by user (Ctrl+C)")
+            print("Training interrupted by user (Ctrl+C)")
         except Exception as e:
-            print(f"\nAn error occurred: {e}")
+
+            raise QLearningError(e)
 
         finally:
             if self.__visual:

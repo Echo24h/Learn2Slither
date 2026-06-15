@@ -108,6 +108,26 @@ def get_preprocess_vision(snake: Snake, food: Food) -> dict[str, str]:
     vision = get_vision(snake, food)
     return {direction: "".join(values) for direction, values in vision.items()}
 
+def remove_rear_vision(snake: Snake, vision: dict[str, str]) -> dict[str, str]:
+    """Remove the rear vision of the snake based on its current direction.
+
+    Args:
+        snake: Snake instance
+        vision: Dictionary of the snake's vision
+
+    Returns:
+        Updated vision dictionary with rear direction removed
+    """
+    current_direction = snake.get_direction()
+    if current_direction == (0, -1):  # UP
+        del vision["DOWN"]
+    elif current_direction == (0, 1):  # DOWN
+        del vision["UP"]
+    elif current_direction == (-1, 0):  # LEFT
+        del vision["RIGHT"]
+    elif current_direction == (1, 0):  # RIGHT
+        del vision["LEFT"]
+    return vision
 
 def print_vision(snake: Snake, food: Food) -> None:
     """

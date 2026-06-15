@@ -170,7 +170,8 @@ class Display:
 
     def __handle_events(self) -> None:
         if self.__is_closed:
-            raise RuntimeError("Game display closed")
+            print("Display is closed")
+            exit()
         self.window.dispatch_events()
 
     def draw_grid(self) -> None:
@@ -220,36 +221,21 @@ class Display:
         )
 
     def draw_coefs(self, snake_head: tuple[int, int],
-                   coefs: dict[str, float]) -> None:
-        up_value = self.__get_colored_text(coefs['UP'])
-        down_value = self.__get_colored_text(coefs['DOWN'])
-        right_value = self.__get_colored_text(coefs['RIGHT'])
-        left_value = self.__get_colored_text(coefs['LEFT'])
+                coefs: dict[str, float]) -> None:
+        x, y = snake_head
+        directions = {
+            'UP': ((x, y - 1), y - 1 >= 0),
+            'DOWN': ((x, y + 1), y + 1 < Config.GRID_HEIGHT.value),
+            'RIGHT': ((x + 1, y), x + 1 < Config.GRID_WIDTH.value),
+            'LEFT': ((x - 1, y), x - 1 >= 0),
+        }
 
-        up_pos = self.__get_centered_position(
-            up_value, snake_head[0], snake_head[1] - 1)
-        down_pos = self.__get_centered_position(
-            down_value, snake_head[0], snake_head[1] + 1)
-        right_pos = self.__get_centered_position(
-            right_value, snake_head[0] + 1, snake_head[1])
-        left_pos = self.__get_centered_position(
-            left_value, snake_head[0] - 1, snake_head[1])
-
-        up_value.x, up_value.y = up_pos
-        down_value.x, down_value.y = down_pos
-        right_value.x, right_value.y = right_pos
-        left_value.x, left_value.y = left_pos
-
-        # Ne dessiner que les coefficients qui restent dans la grille
-        # de jeu, pour ne pas deborder sur le panneau d'info ou hors fenetre.
-        if snake_head[1] - 1 >= 0:
-            up_value.draw()
-        if snake_head[1] + 1 < Config.GRID_HEIGHT.value:
-            down_value.draw()
-        if snake_head[0] + 1 < Config.GRID_WIDTH.value:
-            right_value.draw()
-        if snake_head[0] - 1 >= 0:
-            left_value.draw()
+        for direction, (pos, in_bounds) in directions.items():
+            if not in_bounds or coefs.get(direction) is None:
+                continue
+            value = self.__get_colored_text(coefs[direction])
+            value.x, value.y = self.__get_centered_position(value, *pos)
+            value.draw()
 
     def draw_buttons(self) -> None:
 

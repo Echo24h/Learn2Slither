@@ -94,4 +94,6 @@ if __name__ == "__main__":
         agent.run()
         agent.save_model(args.save)
     except Exception as e:
-        print(f"\nAn error occurred: {e}")
+        import traceback
+        traceback.print_exc()
+        print(f"An error occurred: {e}")
