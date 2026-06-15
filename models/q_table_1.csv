@@ -1,0 +1,8 @@
+step,learning_rate,discount_factor,exploration,exploration_decay,min_exploration,vision_size
+0,0.1,0.8,0.95,0.95,0.01,3
+state,value
+000,-0.1772544
+S00,0
+00W,-0.05
+0W,-0.05
+W,-5.0

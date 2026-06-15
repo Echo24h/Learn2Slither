@@ -40,13 +40,13 @@ class Config(Enum):
     EPISODES = 1  # 1000
 
 
-    # Q-learning parameters (Long-term)
-    # LEARNING_RATE = 0.1
-    # DISCOUNT_FACTOR = 0.99
-    # EXPLORATION_RATE = 1
-    # MIN_EXPLORATION = 0.01 # Final exploration rate after decay
-    # EXPLORATION_DECAY = 0.999  # 0.99
-    # VISION_SIZE = 10 # Size of the vision grid (e.g., 3 for a 3x3 grid around the snake's head)
+    # Q-learning parameters (Long-term ~ 20 000 episodes)
+    # LEARNING_RATE = 0.1 # Learning rate (alpha)
+    # DISCOUNT_FACTOR = 0.999 # Discount factor (gamma)
+    # EXPLORATION_RATE = 1 # Initial exploration rate (epsilon)
+    # MIN_EXPLORATION = 0.0001 # Final exploration rate after decay
+    # EXPLORATION_DECAY = 0.999 # Exploration decay rate per episode
+    # VISION_SIZE = 10 # Number of cells the snake can see in each direction
     # REWARDS = {
     #     "GREEN": 10,
     #     "RED": -10,
@@ -54,23 +54,30 @@ class Config(Enum):
     #     "MOVE": -1
     # }
 
-    # Q-learning parameters (Short-term)
+    # Q-learning parameters (Mid-term ~ 1 000 episodes)
+    # LEARNING_RATE = 0.1
+    # DISCOUNT_FACTOR = 0.9
+    # EXPLORATION_RATE = 1
+    # EXPLORATION_DECAY = 0.99
+    # MIN_EXPLORATION = 0.01
+    # VISION_SIZE = 5
+    # REWARDS = {
+    #     "GREEN": 15,
+    #     "RED": -15,
+    #     "DEAD": -30,
+    #     "MOVE": -1
+    # }
+
+    # Q-learning parameters (Short-term ~ 100 episodes)
     LEARNING_RATE = 0.1
-    DISCOUNT_FACTOR = 0.9
+    DISCOUNT_FACTOR = 0.8
     EXPLORATION_RATE = 1
-    EXPLORATION_DECAY = 0.99
-    MIN_EXPLORATION = 0.01  # Final exploration rate after decay
-    VISION_SIZE = 5  # Size of the vision grid (e.g., 3 for a 3x3 grid around the snake's head)
+    EXPLORATION_DECAY = 0.95
+    MIN_EXPLORATION = 0.01
+    VISION_SIZE = 3
     REWARDS = {
-        "GREEN": 50,
-        "RED": -50,
+        "GREEN": 20,
+        "RED": -20,
         "DEAD": -50,
-        "MOVE": -1
+        "MOVE": -0.5
     }
-
-
-    def display(self) -> None:
-        """Display the configuration parameters"""
-        print("\nConfiguration parameters:")
-        for key, value in self.__dict__.items():
-            print(f"{key} : {value}")
