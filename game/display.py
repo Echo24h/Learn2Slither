@@ -158,10 +158,9 @@ class Display:
         return direction_angles.get(snake.get_direction(), 0)
 
     def __change_ticks(self, change: int) -> None:
-        # ticks_index doit rester un index valide dans Config.FPS.value
-        # (suppose ici 4 entrees, indices 0..3 ; bornes -1..2).
-        min_index = -1
-        max_index = len(Config.FPS.value) - 2
+        # ticks_index doit rester une clé valide dans Config.FPS.value.
+        min_index = min(Config.FPS.value)
+        max_index = max(Config.FPS.value)
         new_index = self.ticks_index + change
         if min_index <= new_index <= max_index:
             self.ticks_index = new_index
