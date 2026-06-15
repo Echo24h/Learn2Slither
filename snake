@@ -54,10 +54,17 @@ if __name__ == "__main__":
         help="Wait for user input between each step"
     )
 
+    parser.add_argument(
+        "-vision",
+        action="store_true",
+        help="Display the snake's vision in the console"
+    )
+
     args = parser.parse_args()
 
     # Convert arguments to appropriate types
     visual = args.visual == "on"
+    vision = args.vision
     learn = not args.dontlearn
 
     # Print configuration
@@ -70,6 +77,7 @@ if __name__ == "__main__":
     print(f"Save model:    {args.save or 'None'}")
     print(f"Learning:      {learn}")
     print(f"Step-by-step:  {args.step_by_step}")
+    print(f"Vision:        {vision}")
     print("=" * 50)
 
     try:
@@ -78,11 +86,12 @@ if __name__ == "__main__":
             visual=visual,
             episodes=args.episodes,
             step_by_step=args.step_by_step,
-            learn=learn
+            learn=learn,
+            vision=vision
         )
 
         agent.load_model(args.load)
         agent.run()
         agent.save_model(args.save)
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"\nAn error occurred: {e}")

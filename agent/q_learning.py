@@ -4,7 +4,7 @@ import numpy as np
 from config import Config
 from game import Snake, Food, Display
 from .q_data import QData
-from .vision import get_preprocess_vision
+from .vision import get_preprocess_vision, print_vision
 from .training_stats import TrainingStats
 
 
@@ -13,10 +13,13 @@ class QLearning:
     Q-Learning agent for the Snake game.
     """
 
-    def __init__(self, visual: bool = True,
-                 episodes: int = Config.EPISODES.value,
-                 step_by_step: bool = False,
-                 learn: bool = True) -> None:
+    def __init__(
+            self,
+            visual: bool = True,
+            episodes: int = Config.EPISODES.value,
+            step_by_step: bool = False,
+            learn: bool = True,
+            vision: bool = True) -> None:
 
         # Initialize Q-data
         self.__q_data = QData()
@@ -24,6 +27,7 @@ class QLearning:
         self.__visual = visual
         self.__step_by_step = step_by_step
         self.__learn = learn
+        self.__vision = vision
 
         # Statistics tracking
         self.__stats = TrainingStats()
@@ -123,6 +127,8 @@ class QLearning:
                 steps = 0
 
                 while not done:
+                    if self.__vision:
+                        print_vision(snake, food)
                     action = self.__choose_action(vision)
                     state = vision[action]
 
@@ -131,6 +137,9 @@ class QLearning:
                         while display.update_display(
                                 snake, food, self.__get_coefs(vision)):
                             continue
+
+                    if self.__vision:
+                        print(f"{action}")
 
                     reward, done = self.__step(action, snake, food)
 
